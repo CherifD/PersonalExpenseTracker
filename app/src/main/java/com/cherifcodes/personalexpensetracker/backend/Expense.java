@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.text.TextUtils;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 public class Expense {
@@ -13,9 +13,9 @@ public class Expense {
     private String category;
     private double amount;
     private String businessName;
-    private Date date;
+    private LocalDateTime date;
 
-    public Expense(String category, String businessName, double amount, Date date) {
+    public Expense(String category, String businessName, double amount, LocalDateTime date) {
         this.setCategory(category);
         this.setBusinessName(businessName);
         this.setAmount(amount);
@@ -24,6 +24,10 @@ public class Expense {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCategory() {
@@ -38,7 +42,7 @@ public class Expense {
         return businessName;
     }
 
-    public Date getDate() {
+    public LocalDateTime  getDate() {
         return date;
     }
 
@@ -60,8 +64,9 @@ public class Expense {
         this.businessName = businessName;
     }
 
-    public void setDate(Date date) {
-        if (date == null || date.compareTo(new Date()) < 0)
+    public void setDate(LocalDateTime  date) {
+        // Throw an error if date's day of year is before yesterday's date.
+        if (date == null || date.getDayOfYear() < (LocalDateTime.now()).getDayOfYear() - 1)
             throw new IllegalArgumentException("Invalid expense date.");
         this.date = date;
     }
