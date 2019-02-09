@@ -70,4 +70,11 @@ public class Expense {
             throw new IllegalArgumentException("Invalid expense date.");
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "Id: " + this.id + ", Category: " + this.category +
+                ", Business name: " + this.businessName +
+                ", Amount: " + this.amount + ", Date: " + this.date;
+    }
 }

@@ -15,10 +15,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjuster;
-import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -43,7 +42,7 @@ public class ExpenseDaoTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testGetTotalByPeriod() throws Exception {
 
         Expense [] expenseArray = {
                 new Expense("Gas", "Shell", 20.00,
@@ -79,6 +78,53 @@ public class ExpenseDaoTest {
         double thisWeekTotal = expenseDao.getThisWeekTotal();
         System.out.println("This week's total is: " + thisWeekTotal);
         assertTrue(thisWeekTotal == 25.0);
+    }
 
+    @Test
+    public void testGetExpensesByCategory() {
+        Expense [] expenseArray = {
+                new Expense("Food", "Wal-Mart", 20.00,
+                        LocalDateTime.of(2019, 3, 13, 2, 56)),
+                new Expense("Gas", "Shell", 20.00,
+                        LocalDateTime.of(2019, 2, 13, 2, 34)),
+                new Expense("Gas", "BP", 25.00,
+                        LocalDateTime.of(2019, 2, 9, 21, 3)),
+                new Expense("Education", "DataCamp", 45.00,
+                        LocalDateTime.of(2019, 3, 13, 2, 11)),
+                new Expense("Food", "Wal-Mart", 50.00,
+                        LocalDateTime.of(2020, 2, 22, 2, 56)),
+                new Expense("Food", "Harris Teter", 60.00,
+                        LocalDateTime.of(2019, 5, 11, 2, 56)),
+        };
+
+        // Insert all expenses into database
+        for (Expense exp : expenseArray) {
+            expenseDao.insertExpense(exp);
+        }
+
+        //Test getExpenses by category
+        List<Expense> categoryExpenses = expenseDao.getExpensesByCategory("Food");
+
+        //Make sure the list size is correct
+        assertTrue(categoryExpenses.size() == 3);
+
+        // View the returned list of expenses
+        for (Expense ex : categoryExpenses) {
+            System.out.println(ex + "\n\n");
+        }
+
+        //Test to make sure that only Expenses having the correct category are returned.
+        List<Expense> actualList = new ArrayList<>();
+        actualList.add(new Expense("Food", "Wal-Mart", 20.00,
+                LocalDateTime.of(2019, 3, 13, 2, 56)));
+        actualList.add(new Expense("Food", "Wal-Mart", 50.00,
+                LocalDateTime.of(2020, 2, 22, 2, 56)));
+        actualList.add(new Expense("Food", "Harris Teter", 60.00,
+                LocalDateTime.of(2019, 5, 11, 2, 56)));
+
+        for (int i = 0; i < actualList.size(); i++) {
+            assertTrue(actualList.get(i).getCategory().equals(categoryExpenses.get(i)
+            .getCategory()));
+        }
     }
 }

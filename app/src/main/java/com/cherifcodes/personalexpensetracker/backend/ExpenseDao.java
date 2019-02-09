@@ -42,4 +42,5 @@ public interface ExpenseDao {
 
     @Query("SELECT SUM(amount) from Expense WHERE strftime('%W', date) = strftime('%W', 'now')")
     double getThisWeekTotal();
+
 }
