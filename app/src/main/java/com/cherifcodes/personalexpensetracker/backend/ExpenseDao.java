@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static android.icu.text.MessagePattern.ArgType.SELECT;
@@ -29,5 +30,16 @@ public interface ExpenseDao {
     List<Expense> getAllExpenses();
 
     @Query("SELECT COUNT(*) FROM Expense")
-    long getNumberOfRecords();
+    int getNumberOfRecords();
+
+    @Query("SELECT SUM(amount) from Expense WHERE date BETWEEN datetime('now', 'start of year') " +
+            "AND datetime('now', 'start of year', '1 year', '-1 day')")
+    double getThisYearTotal();
+
+    @Query("SELECT SUM(amount) from Expense WHERE date BETWEEN datetime('now', 'start of month') " +
+            "AND datetime('now', 'start of month', '1 month', '-1 day')")
+    double getThisMonthTotal();
+
+    @Query("SELECT SUM(amount) from Expense WHERE strftime('%W', date) = strftime('%W', 'now')")
+    double getThisWeekTotal();
 }
