@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/pieSummary">
+
+    <fragment
+        android:id="@+id/pieSummary"
+        android:name="com.cherifcodes.personalexpensetracker.PieSummary"
+        android:label="fragment_pie_summary"
+        tools:layout="@layout/fragment_pie_summary" >
+        <action
+            android:id="@+id/action_pieSummary_to_listSummary"
+            app:destination="@id/listSummary" />
+    </fragment>
+    <fragment
+        android:id="@+id/listSummary"
+        android:name="com.cherifcodes.personalexpensetracker.ListSummary"
+        android:label="fragment_list_summary"
+        tools:layout="@layout/fragment_list_summary" >
+        <action
+            android:id="@+id/action_listSummary_to_categoryExpenses"
+            app:destination="@id/categoryExpenses" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryExpenses"
+        android:name="com.cherifcodes.personalexpensetracker.CategoryExpenses"
+        android:label="fragment_category_expenses"
+        tools:layout="@layout/fragment_category_expenses" >
+        <action
+            android:id="@+id/action_categoryExpenses_to_editExpense"
+            app:destination="@id/editExpense" />
+        <action
+            android:id="@+id/action_categoryExpenses_to_newExpense"
+            app:destination="@id/newExpense" />
+    </fragment>
+    <fragment
+        android:id="@+id/newExpense"
+        android:name="com.cherifcodes.personalexpensetracker.NewExpense"
+        android:label="fragment_new_expense"
+        tools:layout="@layout/fragment_new_expense" />
+    <fragment
+        android:id="@+id/editExpense"
+        android:name="com.cherifcodes.personalexpensetracker.EditExpense"
+        android:label="fragment_edit_expense"
+        tools:layout="@layout/fragment_edit_expense" />
+
+</navigation>
