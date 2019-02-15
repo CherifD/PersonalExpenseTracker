@@ -1,6 +1,7 @@
 package com.cherifcodes.personalexpensetracker;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -70,6 +71,14 @@ public class PieSummary extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_pie_summary, container, false);
         FloatingActionButton fab = fragmentView.findViewById(R.id.fab_pie_summary);
 
+        /////////////////////////// Change fab's background color programmatically
+        //fab.setBackgroundColor(Color.BLUE); No visible change
+        //fab.setBackgroundResource(0);
+        //fab.setBackgroundColor(Color.BLUE); Still no visible change
+
+        fab.setImageResource(0); // Removed the image
+
+        //////////////
         //Attach navigation to fab button
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

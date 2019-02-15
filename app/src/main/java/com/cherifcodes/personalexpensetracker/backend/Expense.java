@@ -65,8 +65,8 @@ public class Expense {
     }
 
     public void setDate(LocalDateTime  date) {
-        // Throw an error if date's day of year is before yesterday's date.
-        if (date == null || date.getDayOfYear() < (LocalDateTime.now()).getDayOfYear() - 1)
+        // Throw an error if date is before yesterday's date.
+        if (date == null || date.compareTo(LocalDateTime.now().minusDays(1)) < 0)
             throw new IllegalArgumentException("Invalid expense date.");
         this.date = date;
     }
