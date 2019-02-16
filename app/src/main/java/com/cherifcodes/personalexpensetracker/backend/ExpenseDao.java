@@ -6,12 +6,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
-import android.database.Cursor;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static android.icu.text.MessagePattern.ArgType.SELECT;
 
 @Dao
 public interface ExpenseDao {
@@ -28,7 +24,7 @@ public interface ExpenseDao {
     List<Expense> getExpensesByCategory(String category);
 
     @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense GROUP BY category")
-    List<ExpenseCategory> getEntireCategoryTotals();
+    List<ExpenseCategoryTotal> getEntireCategoryTotals();
 
     @Query("SELECT * FROM Expense ORDER BY id ASC")
     List<Expense> getAllExpenses();
@@ -44,7 +40,7 @@ public interface ExpenseDao {
             "WHERE date BETWEEN datetime('now', 'start of year') " +
             "AND datetime('now', 'start of year', '1 year') " +
             "GROUP BY category")
-    List<ExpenseCategory> getCurrYearCategoryTotals();
+    List<ExpenseCategoryTotal> getCurrYearCategoryTotals();
 
 
     @Query("SELECT SUM(amount) from Expense WHERE date BETWEEN datetime('now', 'start of month') " +
@@ -55,7 +51,7 @@ public interface ExpenseDao {
             "WHERE date BETWEEN datetime('now', 'start of month') " +
             "AND datetime('now', 'start of month', '1 month') " +
             "GROUP BY category")
-    List<ExpenseCategory> getCurrMonthCategoryTotals();
+    List<ExpenseCategoryTotal> getCurrMonthCategoryTotals();
 
 
     @Query("SELECT SUM(amount) from Expense WHERE strftime('%W', date) = strftime('%W', 'now')")
@@ -65,6 +61,6 @@ public interface ExpenseDao {
             "WHERE strftime('%W', date) = strftime('%W', 'now') " +
             "AND strftime('%Y', date) = strftime('%Y', 'now') " +
             "GROUP BY category")
-    List<ExpenseCategory> getCurrWeekTotals();
+    List<ExpenseCategoryTotal> getCurrWeekTotals();
 
 }

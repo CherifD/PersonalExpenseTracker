@@ -2,12 +2,12 @@ package com.cherifcodes.personalexpensetracker.backend;
 
 import java.util.Objects;
 
-public class ExpenseCategory {
+public class ExpenseCategoryTotal {
 
     private String categoryName;
     private double categoryTotal;
 
-    public ExpenseCategory(String categoryName, double categoryTotal) {
+    public ExpenseCategoryTotal(String categoryName, double categoryTotal) {
         this.categoryName = categoryName;
         this.categoryTotal = categoryTotal;
     }
@@ -32,7 +32,7 @@ public class ExpenseCategory {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ExpenseCategory that = (ExpenseCategory) o;
+        ExpenseCategoryTotal that = (ExpenseCategoryTotal) o;
         return Double.compare(that.categoryTotal, categoryTotal) == 0 &&
                 Objects.equals(categoryName, that.categoryName);
     }
@@ -44,7 +44,7 @@ public class ExpenseCategory {
 
     @Override
     public String toString() {
-        return "ExpenseCategory{" +
+        return "ExpenseCategoryTotal{" +
                 "categoryName='" + categoryName + '\'' +
                 ", categoryTotal=" + categoryTotal +
                 '}';

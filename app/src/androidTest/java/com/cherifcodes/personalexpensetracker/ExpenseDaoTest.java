@@ -7,7 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.cherifcodes.personalexpensetracker.backend.AppDatabase;
 import com.cherifcodes.personalexpensetracker.backend.Expense;
-import com.cherifcodes.personalexpensetracker.backend.ExpenseCategory;
+import com.cherifcodes.personalexpensetracker.backend.ExpenseCategoryTotal;
 import com.cherifcodes.personalexpensetracker.backend.ExpenseDao;
 
 import org.junit.After;
@@ -47,13 +47,13 @@ public class ExpenseDaoTest {
 
         Expense [] expenseArray = {
                 new Expense("Gas", "Shell", 20.00,
-                        LocalDateTime.of(2019, 2, 14, 2, 34)),
+                        LocalDateTime.of(2019, 2, 15, 2, 34)),
                 new Expense("Gas", "BP", 25.00,
                         LocalDateTime.of(2019, 2, 15, 21, 3)),
                 new Expense("Education", "DataCamp", 45.00,
-                        LocalDateTime.of(2019, 3, 14, 2, 11)),
+                        LocalDateTime.of(2019, 3, 15, 2, 11)),
                 new Expense("Food", "Wal-Mart", 50.00,
-                        LocalDateTime.of(2020, 3, 14, 2, 56)),
+                        LocalDateTime.of(2020, 3, 15, 2, 56)),
         };
 
         // Insert all expenses into database
@@ -87,11 +87,11 @@ public class ExpenseDaoTest {
                 new Expense("Food", "Wal-Mart", 20.00,
                         LocalDateTime.of(2019, 3, 13, 2, 56)),
                 new Expense("Gas", "Shell", 20.00,
-                        LocalDateTime.of(2019, 2, 14, 2, 34)),
+                        LocalDateTime.of(2019, 2, 15, 2, 34)),
                 new Expense("Gas", "BP", 25.00,
-                        LocalDateTime.of(2019, 2, 14, 21, 3)),
+                        LocalDateTime.of(2019, 2, 15, 21, 3)),
                 new Expense("Education", "DataCamp", 45.00,
-                        LocalDateTime.of(2019, 3, 14, 2, 11)),
+                        LocalDateTime.of(2019, 3, 15, 2, 11)),
                 new Expense("Food", "Wal-Mart", 50.00,
                         LocalDateTime.of(2020, 2, 22, 2, 56)),
                 new Expense("Food", "Harris Teeter", 60.00,
@@ -129,10 +129,10 @@ public class ExpenseDaoTest {
         }
 
         //Test getCurrYearCategoryTotals()
-        List<ExpenseCategory> categoryTotals = expenseDao.getEntireCategoryTotals(); //WORKS!!
-        //List<ExpenseCategory> categoryTotals = expenseDao.getCurrYearCategoryTotals(); //WORKS!!
+        List<ExpenseCategoryTotal> categoryTotals = expenseDao.getEntireCategoryTotals(); //WORKS!!
+        //List<ExpenseCategoryTotal> categoryTotals = expenseDao.getCurrYearCategoryTotals(); //WORKS!!
         // View the returned categoryTotals list
-        for (ExpenseCategory cat : categoryTotals) {
+        for (ExpenseCategoryTotal cat : categoryTotals) {
             System.out.println("Category!!!: " + cat + "\n\n");
         }
     }
@@ -141,12 +141,12 @@ public class ExpenseDaoTest {
     public void testGetCurrentYearCategoryTotals() {
         //Expense list to insert into the database
         Expense [] expenseArray = {
-                new Expense("Food", "Wal-Mart", 30.00,
-                        LocalDateTime.of(2019, 3, 14, 2, 56)),
+                new Expense("Food", "Wal-Mart", 50.00,
+                        LocalDateTime.of(2019, 3, 15, 2, 56)),
                 new Expense("Gas", "Shell", 30.00,
                         LocalDateTime.of(2019, 2, 15, 2, 34)),
                 new Expense("Gas", "BP", 20.00,
-                        LocalDateTime.of(2019, 2, 16, 21, 3)),
+                        LocalDateTime.of(2019, 2, 18, 21, 3)),
                 new Expense("Education", "DataCamp", 45.00,
                         LocalDateTime.of(2019, 3, 13, 2, 11)),
                 new Expense("Education", "DataCamp", 45.00,
@@ -155,27 +155,26 @@ public class ExpenseDaoTest {
                         LocalDateTime.of(2019, 12, 31, 11, 50)),
                 new Expense("Food", "Harris Teeter", 60.00,
                         LocalDateTime.of(2023, 5, 11, 2, 56)),
+                new Expense("Gas", "Exxon Mobile", 40.00,
+                        LocalDateTime.of(2019, 11, 1, 12, 34))
         };
 
         // Insert all expenses into database
         for (Expense exp : expenseArray) {
             expenseDao.insertExpense(exp);
         }
+        
+        //Returned list of category totals
+        List<ExpenseCategoryTotal> expenseCategoryTotalList = expenseDao.getCurrYearCategoryTotals();
+        assertTrue(expenseCategoryTotalList.size() == 3);
 
-        //Actual list of 2019 category totals
-        ExpenseCategory [] actualExpenseCategories = {
-                new ExpenseCategory("Food", 140.0),
-                new ExpenseCategory("Gas", 50.0),
-                new ExpenseCategory("Education", 45.00)
-        };
-
-        //Returned list of expense categories
-        List<ExpenseCategory> expenseCategoryList = expenseDao.getCurrYearCategoryTotals();
-        assertTrue(expenseCategoryList.size() == 3);
-
-        for (ExpenseCategory eCat : expenseCategoryList) {
-            //assertTrue(expenseCategoryList.contains(eCat));
-            System.out.println(eCat);
+        for (ExpenseCategoryTotal eCat : expenseCategoryTotalList) {
+            if (eCat.getCategoryName().equals("Food"))
+                assertTrue(eCat.getCategoryTotal() == 100.0);
+            else if (eCat.getCategoryName().equals("Gas"))
+                assertTrue(eCat.getCategoryTotal() == 90);
+            else if (eCat.getCategoryName().equals("Education"))
+                assertTrue(eCat.getCategoryTotal() == 45);
         }
     }
 
@@ -184,7 +183,7 @@ public class ExpenseDaoTest {
         //Expense list to insert into the database
         Expense [] expenseArray = {
                 new Expense("Food", "Wal-Mart", 30.00,
-                        LocalDateTime.of(2019, 2, 14, 2, 56)),
+                        LocalDateTime.of(2019, 2, 15, 2, 56)),
                 new Expense("Gas", "Shell", 30.00,
                         LocalDateTime.of(2019, 2, 25, 2, 34)),
                 new Expense("Gas", "BP", 20.00,
@@ -206,14 +205,57 @@ public class ExpenseDaoTest {
 
 
         //Returned list of expense categories
-        List<ExpenseCategory> expenseCategoryList = expenseDao.getCurrMonthCategoryTotals();
-        assertTrue(expenseCategoryList.size() == 3);
+        List<ExpenseCategoryTotal> expenseCategoryTotalList = expenseDao.getCurrMonthCategoryTotals();
+        assertTrue(expenseCategoryTotalList.size() == 3);
 
-        for (ExpenseCategory eCat : expenseCategoryList) {
+        for (ExpenseCategoryTotal eCat : expenseCategoryTotalList) {
             if (eCat.getCategoryName().equals("Food"))
                 assertTrue(eCat.getCategoryTotal() == 30.0);
             else if (eCat.getCategoryName().equals("Gas"))
                 assertTrue(eCat.getCategoryTotal() == 50);
+            else if (eCat.getCategoryName().equals("Education"))
+                assertTrue(eCat.getCategoryTotal() == 45);
+        }
+    }
+
+
+    @Test
+    public void testGetCurrWeekCategoryTotals() {
+        //Expense list to insert into the database
+        Expense [] expenseArray = {
+                new Expense("Food", "Wal-Mart", 30.00,
+                        LocalDateTime.of(2019, 2, 15, 2, 56)),
+                new Expense("Gas", "Shell", 30.00,
+                        LocalDateTime.of(2019, 2, 25, 2, 34)),
+                new Expense("Gas", "BP", 20.00,
+                        LocalDateTime.of(2019, 2, 16, 21, 3)),
+                new Expense("Education", "DataCamp", 45.00,
+                        LocalDateTime.of(2019, 2, 18, 2, 11)),
+                new Expense("Education", "DataCamp", 70.00,
+                        LocalDateTime.of(2020, 1, 2, 0, 00)),
+                new Expense("Food", "Wal-Mart", 50.00,
+                        LocalDateTime.of(2019, 12, 31, 11, 50)),
+                new Expense("Food", "Harris Teeter", 60.00,
+                        LocalDateTime.of(2023, 2, 11, 2, 56)),
+                new Expense("Gas", "BP", 15.00,
+                        LocalDateTime.of(2019, 2, 15, 21, 3))
+        };
+
+        // Insert all expenses into database
+        for (Expense exp : expenseArray) {
+            expenseDao.insertExpense(exp);
+        }
+
+
+        //Returned list of expense categories
+        List<ExpenseCategoryTotal> expenseCategoryTotalList = expenseDao.getCurrWeekTotals();
+        assertTrue(expenseCategoryTotalList.size() == 2);
+
+        for (ExpenseCategoryTotal eCat : expenseCategoryTotalList) {
+            if (eCat.getCategoryName().equals("Food"))
+                assertTrue(eCat.getCategoryTotal() == 30.0);
+            else if (eCat.getCategoryName().equals("Gas"))
+                assertTrue(eCat.getCategoryTotal() == 35);
             else if (eCat.getCategoryName().equals("Education"))
                 assertTrue(eCat.getCategoryTotal() == 45);
         }
