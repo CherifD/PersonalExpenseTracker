@@ -7,14 +7,14 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
+    <!--<TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hello World!"
         android:textSize="30sp"
         android:layout_gravity="center"
         android:layout_margin="32dp"
-        android:textStyle="bold" />
+        android:textStyle="bold" />-->
 
     <fragment
         android:id="@+id/fragment"

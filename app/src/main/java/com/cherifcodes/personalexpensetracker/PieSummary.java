@@ -76,7 +76,7 @@ public class PieSummary extends Fragment {
         //fab.setBackgroundResource(0);
         //fab.setBackgroundColor(Color.BLUE); Still no visible change
 
-        fab.setImageResource(0); // Removed the image
+        //fab.setImageResource(0); // Removed the image
 
         //////////////
         //Attach navigation to fab button
@@ -84,7 +84,7 @@ public class PieSummary extends Fragment {
             @Override
             public void onClick(View v) {
                 //Navigation.createNavigateOnClickListener(R.id.listSummary, null);
-                Navigation.findNavController(v).navigate(R.id.listSummary);
+                Navigation.findNavController(getActivity(), R.id.fragment).navigate(R.id.listSummary);
             }
         });
 

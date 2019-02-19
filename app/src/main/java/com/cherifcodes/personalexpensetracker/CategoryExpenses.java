@@ -1,12 +1,19 @@
 package com.cherifcodes.personalexpensetracker;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.cherifcodes.personalexpensetracker.backend.ExpenseCategoryTotal;
+import com.cherifcodes.personalexpensetracker.viewModels.ViewModelListSumCatExpense;
 
 
 /**
@@ -26,6 +33,8 @@ public class CategoryExpenses extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ViewModelListSumCatExpense mModel;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,13 +67,31 @@ public class CategoryExpenses extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mModel = ViewModelProviders.of(getActivity()).get(ViewModelListSumCatExpense.class);
+        mModel.getExpenseCategoryTotal().observe(this, new Observer<ExpenseCategoryTotal>() {
+            @Override
+            public void onChanged(@Nullable ExpenseCategoryTotal expenseCategoryTotal) {
+
+            }
+        });
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_category_expenses, container, false);
+        View categoryExpensesView = inflater.inflate(R.layout.fragment_category_expenses, container, false);
+        TextView categoryAmount = categoryExpensesView.findViewById(R.id.tv_category_total);
+        TextView categoryName = categoryExpensesView.findViewById(R.id.tv_category_period);
+        TextView categoryTotalUnit = categoryExpensesView.findViewById(R.id.tv_category_unit);
+
+        categoryTotalUnit.setText(getString(R.string.us_dollars));
+        categoryName.setText(getString(R.string.this_month_total));
+        categoryAmount.setText(mModel.getExpenseCategoryTotal().getValue().getCategoryTotal() + "");
+
+        return categoryExpensesView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -77,12 +104,12 @@ public class CategoryExpenses extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+        /*if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
-        }
+        }*/
     }
 
     @Override
@@ -105,4 +132,6 @@ public class CategoryExpenses extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

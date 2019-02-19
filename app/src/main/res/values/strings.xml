@@ -4,4 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_list_summary">Welcome to Expense List Summary!</string>
+    <string name="unit">dollars</string>
+    <string name="this_month_total">This month\'s total:</string>
+    <string name="us_dollars">dollars</string>
 </resources>

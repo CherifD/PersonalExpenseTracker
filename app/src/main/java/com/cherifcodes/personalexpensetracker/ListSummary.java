@@ -1,12 +1,25 @@
 package com.cherifcodes.personalexpensetracker;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.cherifcodes.personalexpensetracker.adaptersAndListeners.CategoryTotalItemClickListener;
+import com.cherifcodes.personalexpensetracker.adaptersAndListeners.ListSummaryAdapter;
+import com.cherifcodes.personalexpensetracker.backend.ExpenseCategoryTotal;
+import com.cherifcodes.personalexpensetracker.viewModels.ViewModelListSumCatExpense;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -17,7 +30,7 @@ import android.view.ViewGroup;
  * Use the {@link ListSummary#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ListSummary extends Fragment {
+public class ListSummary extends Fragment implements CategoryTotalItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -27,7 +40,12 @@ public class ListSummary extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private List<ExpenseCategoryTotal> mCategoryTotalsList = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+
+    private ViewModelListSumCatExpense mModel;
+
+    //private OnFragmentInteractionListener mListener;
 
     public ListSummary() {
         // Required empty public constructor
@@ -58,30 +76,52 @@ public class ListSummary extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //Connect this Fragment to its ViewModel
+        mModel = ViewModelProviders.of(getActivity()).get(ViewModelListSumCatExpense.class);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list_summary, container, false);
+        View fragmentView =  inflater.inflate(R.layout.fragment_list_summary, container, false);
+        mRecyclerView = fragmentView.findViewById(R.id.reclView_list_summary);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        //Fill the CategoryTotalsList with some dummy data
+        mCategoryTotalsList = new ArrayList<>();
+        mCategoryTotalsList.add(new ExpenseCategoryTotal("Food", 45.0));
+        mCategoryTotalsList.add(new ExpenseCategoryTotal("Gas", 45.0));
+        mCategoryTotalsList.add(new ExpenseCategoryTotal("Education", 110.0));
+        mCategoryTotalsList.add(new ExpenseCategoryTotal("Sport", 25.0));
+
+        ListSummaryAdapter listSummaryAdapter = new ListSummaryAdapter(mCategoryTotalsList, this);
+        mRecyclerView.setAdapter(listSummaryAdapter);
+
+        return fragmentView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    @Override
+    public void onCategoryTotalItemClicked(int itemPosition) {
+        mModel.setExpenseCategoryTotal(mCategoryTotalsList.get(itemPosition));
+    }
+
+   /* // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-    }
+    }*/
 
 
-    @Override
+    /*@Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    /**
+    *//**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
