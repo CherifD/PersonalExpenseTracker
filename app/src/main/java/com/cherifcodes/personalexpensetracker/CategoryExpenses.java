@@ -6,14 +6,28 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListAdapter;
 import android.widget.TextView;
 
+import com.cherifcodes.personalexpensetracker.adaptersAndListeners.CategoryExpensesAdapter;
+import com.cherifcodes.personalexpensetracker.adaptersAndListeners.ExpenseItemClickListener;
+import com.cherifcodes.personalexpensetracker.backend.Expense;
 import com.cherifcodes.personalexpensetracker.backend.ExpenseCategoryTotal;
 import com.cherifcodes.personalexpensetracker.viewModels.ViewModelListSumCatExpense;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.navigation.Navigation;
 
 
 /**
@@ -24,7 +38,7 @@ import com.cherifcodes.personalexpensetracker.viewModels.ViewModelListSumCatExpe
  * Use the {@link CategoryExpenses#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CategoryExpenses extends Fragment {
+public class CategoryExpenses extends Fragment implements ExpenseItemClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,6 +49,8 @@ public class CategoryExpenses extends Fragment {
     private String mParam2;
 
     private ViewModelListSumCatExpense mModel;
+    private RecyclerView mRecyclerView;
+    private List<Expense> mExpenseList = new ArrayList<>();
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,6 +92,14 @@ public class CategoryExpenses extends Fragment {
             }
         });
 
+        mExpenseList.add(new Expense("Food", "Wal-Mart", 48.50,
+                LocalDateTime.of(2019, 03, 13, 23, 13)));
+        mExpenseList.add(new Expense("Gas", "Shell", 26.94,
+                LocalDateTime.of(2019, 02, 28, 23, 13)));
+        mExpenseList.add(new Expense("Gas", "Sheetz", 22.56,
+                LocalDateTime.of(2019, 03, 10, 23, 13)));
+        mExpenseList.add(new Expense("Health", "CVS", 109.50,
+                LocalDateTime.of(2019, 03, 29, 23, 13)));
     }
 
     @Override
@@ -90,6 +114,22 @@ public class CategoryExpenses extends Fragment {
         categoryTotalUnit.setText(getString(R.string.us_dollars));
         categoryName.setText(getString(R.string.this_month_total));
         categoryAmount.setText(mModel.getExpenseCategoryTotal().getValue().getCategoryTotal() + "");
+
+        mRecyclerView = categoryExpensesView.findViewById(R.id.reclView_category_expenses);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        CategoryExpensesAdapter categoryExpensesAdapter = new CategoryExpensesAdapter(mExpenseList,
+                this);
+        mRecyclerView.setAdapter(categoryExpensesAdapter);
+
+        FloatingActionButton fab = categoryExpensesView.findViewById(R.id.fab_cat_expenses);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(getActivity(), R.id.fragment)
+                        .navigate(R.id.newExpense);
+            }
+        });
 
         return categoryExpensesView;
     }
@@ -112,10 +152,15 @@ public class CategoryExpenses extends Fragment {
         }*/
     }
 
-    @Override
+    /*@Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }*/
+
+    @Override
+    public void onExpenseItemClicked(int itemPosition) {
+
     }
 
     /**
