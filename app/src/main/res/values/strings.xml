@@ -1,10 +1,31 @@
 <resources>
     <string name="app_name">Personal Expense Tracker</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="expense_categories_array">
+        <item>Food</item>
+        <item>Health</item>
+        <item>Health insurance</item>
+        <item>Other insurance</item>
+        <item>Education</item>
+        <item>Debt payment</item>
+        <item>Clothes</item>
+        <item>Recreation</item>
+        <item>Lodging</item>
+        <item>Saving</item>
+        <item>Transportation</item>
+        <item>Communication</item>
+        <item>House items</item>
+        <item>Exercise</item>
+        <item>Donation</item>
+        <item>Security</item>
+        <item>Other</item>
+    </string-array>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_list_summary">Welcome to Expense List Summary!</string>
     <string name="unit">dollars</string>
     <string name="this_month_total">This month\'s total:</string>
     <string name="us_dollars">dollars</string>
+    <string name="save_btn_label">Save</string>
+    <string name="business_name_hint">Business name</string>
+    <string name="amount_hint">0.00</string>
 </resources>

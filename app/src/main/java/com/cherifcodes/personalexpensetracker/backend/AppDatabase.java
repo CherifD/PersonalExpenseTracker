@@ -6,17 +6,20 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-@Database(version = 1, entities = {Expense.class})
+@Database(entities = {Expense.class}, version = 1)
 @TypeConverters(DateTypeConverter.class)
 public abstract class AppDatabase extends RoomDatabase {
     abstract public ExpenseDao expenseDao();
     private static volatile AppDatabase INSTANCE;
 
-    static AppDatabase getInstance(final Context context) {
+    public static AppDatabase getInstance(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            /////////////////
+                            //AppDatabase.class, "Expense_database").allowMainThreadQueries().build();
+                            ///////////////
                             AppDatabase.class, "Expense_database").build();
                     return INSTANCE;
                 }

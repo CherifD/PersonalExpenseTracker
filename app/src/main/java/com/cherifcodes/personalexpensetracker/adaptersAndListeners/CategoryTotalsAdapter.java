@@ -1,31 +1,32 @@
 package com.cherifcodes.personalexpensetracker.adaptersAndListeners;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.cherifcodes.personalexpensetracker.ListSummary;
 import com.cherifcodes.personalexpensetracker.R;
-import com.cherifcodes.personalexpensetracker.backend.ExpenseCategoryTotal;
+import com.cherifcodes.personalexpensetracker.backend.CategoryTotal;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
-import androidx.navigation.Navigation;
 
-public class ListSummaryAdapter extends RecyclerView.Adapter<ListSummaryAdapter.CategoryTotalHolder> {
+public class CategoryTotalsAdapter extends RecyclerView.Adapter<CategoryTotalsAdapter.CategoryTotalHolder> {
 
-    private List<ExpenseCategoryTotal> mCategoryTotals;
+    private List<CategoryTotal> mCategoryTotals;
     private static CategoryTotalItemClickListener mCategoryTotalItemClickListener;
 
-    public ListSummaryAdapter(List<ExpenseCategoryTotal> categoryTotals,
-                              CategoryTotalItemClickListener itemClickListener){
+    public CategoryTotalsAdapter(List<CategoryTotal> categoryTotals,
+                                 CategoryTotalItemClickListener itemClickListener){
         mCategoryTotalItemClickListener = itemClickListener;
         this.mCategoryTotals = categoryTotals;
+    }
+
+    public void setCategoryTotalsList(List<CategoryTotal> categoryTotalList) {
+        this.mCategoryTotals = categoryTotalList;
     }
 
     @NonNull
@@ -44,9 +45,12 @@ public class ListSummaryAdapter extends RecyclerView.Adapter<ListSummaryAdapter.
 
         categoryTotalHolder.mSummaryListFabLabel.setText(firstLetterOfCategoryName);
         categoryTotalHolder.mSummaryListCategory.setText(mCategoryTotals.get(i).getCategoryName());
-        categoryTotalHolder.mSummaryListAmount.setText(
-                String.valueOf(mCategoryTotals.get(i).getCategoryTotal()));
         categoryTotalHolder.mSummaryListUnit.setText(R.string.unit);
+
+        DecimalFormat df = new DecimalFormat("###.##");
+        double total = mCategoryTotals.get(i).getCategoryTotal();
+        categoryTotalHolder.mSummaryListAmount.setText(
+                String.valueOf(df.format(total)));
     }
 
     @Override
@@ -61,18 +65,20 @@ public class ListSummaryAdapter extends RecyclerView.Adapter<ListSummaryAdapter.
         private TextView mSummaryListAmount;
         private TextView mSummaryListUnit;
         private TextView mSummaryListFabLabel;
+
         public CategoryTotalHolder(@NonNull View itemView) {
             super(itemView);
+
             mSummaryListCategory = itemView.findViewById(R.id.tv_sumary_list_item_category);
             mSummaryListAmount = itemView.findViewById(R.id.tv_sumary_list_item_amount);
             mSummaryListUnit = itemView.findViewById(R.id.tv_summary_list_item_unit);
             mSummaryListFabLabel = itemView.findViewById(R.id.tv_summary_list_item_fab_label);
+
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            Navigation.findNavController(v).navigate(R.id.categoryExpenses);
             mCategoryTotalItemClickListener.onCategoryTotalItemClicked(getAdapterPosition());
         }
     }

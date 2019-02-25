@@ -24,6 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Category Category Category"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/img_cat_expense_item"
         app:layout_constraintEnd_toStartOf="@+id/tv_amount_cat_expense_item"
         app:layout_constraintHorizontal_bias="0.5"

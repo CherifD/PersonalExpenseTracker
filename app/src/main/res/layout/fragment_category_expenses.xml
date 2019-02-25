@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CategoryExpenses">
+    tools:context=".CategoryExpensesFragment">
 
     <TextView
         android:id="@+id/tv_category_period"
         style="@style/period_style"
-        android:text="This week (category):"
+        tools:text="This week (category):"
         app:layout_constraintEnd_toStartOf="@+id/tv_category_total"
         app:layout_constraintHorizontal_bias=".5"
         app:layout_constraintHorizontal_weight="1"

@@ -1,5 +1,6 @@
 package com.cherifcodes.personalexpensetracker.backend;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -20,14 +21,28 @@ public interface ExpenseDao {
     @Delete
     int deleteExpense(Expense expense);
 
-    @Query("SELECT * FROM Expense WHERE category LIKE :category")
+    @Query("SELECT * FROM Expense WHERE category = :category")
     List<Expense> getExpensesByCategory(String category);
 
     @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense GROUP BY category")
-    List<ExpenseCategoryTotal> getEntireCategoryTotals();
+    public LiveData<List<CategoryTotal>> getAllCategoryTotals();
 
-    @Query("SELECT * FROM Expense ORDER BY id ASC")
-    List<Expense> getAllExpenses();
+    @Query("SELECT * FROM Expense WHERE strftime('%Y', date) = strftime('%Y', 'now') " +
+            "AND category = :category " +
+            "ORDER BY date")
+    LiveData<List<Expense>> getThisYearExpenses(String category);
+
+    @Query("SELECT * FROM Expense WHERE date BETWEEN datetime('now', 'start of month') " +
+            "AND datetime('now', 'start of month', '1 month') " +
+            "AND category = :category " +
+            "ORDER BY id ASC")
+    LiveData<List<Expense>> getThisMonthExpenses(String category);
+
+    @Query("SELECT * FROM Expense WHERE strftime('%W', date) = strftime('%W', 'now') " +
+            "AND strftime('%Y', date) = strftime('%Y', 'now') " +
+            "AND category = :category " +
+            "ORDER BY date")
+    LiveData<List<Expense>> getThisWeekExpenses(String category);
 
     @Query("SELECT COUNT(*) FROM Expense")
     int getNumberOfRecords();
@@ -40,7 +55,7 @@ public interface ExpenseDao {
             "WHERE date BETWEEN datetime('now', 'start of year') " +
             "AND datetime('now', 'start of year', '1 year') " +
             "GROUP BY category")
-    List<ExpenseCategoryTotal> getCurrYearCategoryTotals();
+    List<CategoryTotal> getCurrYearCategoryTotals();
 
 
     @Query("SELECT SUM(amount) from Expense WHERE date BETWEEN datetime('now', 'start of month') " +
@@ -51,7 +66,7 @@ public interface ExpenseDao {
             "WHERE date BETWEEN datetime('now', 'start of month') " +
             "AND datetime('now', 'start of month', '1 month') " +
             "GROUP BY category")
-    List<ExpenseCategoryTotal> getCurrMonthCategoryTotals();
+    List<CategoryTotal> getCurrMonthCategoryTotals();
 
 
     @Query("SELECT SUM(amount) from Expense WHERE strftime('%W', date) = strftime('%W', 'now')")
@@ -61,6 +76,6 @@ public interface ExpenseDao {
             "WHERE strftime('%W', date) = strftime('%W', 'now') " +
             "AND strftime('%Y', date) = strftime('%Y', 'now') " +
             "GROUP BY category")
-    List<ExpenseCategoryTotal> getCurrWeekTotals();
+    List<CategoryTotal> getCurrWeekTotals();
 
 }

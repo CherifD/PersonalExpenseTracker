@@ -5,15 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cherifcodes.personalexpensetracker.R;
 import com.cherifcodes.personalexpensetracker.backend.Expense;
 
 import java.util.List;
-
-import androidx.navigation.Navigation;
 
 public class CategoryExpensesAdapter extends RecyclerView.Adapter<CategoryExpensesAdapter.ExpenseHolder> {
 
@@ -22,15 +19,20 @@ public class CategoryExpensesAdapter extends RecyclerView.Adapter<CategoryExpens
 
     public CategoryExpensesAdapter(List<Expense> expenses, ExpenseItemClickListener clickListener) {
         mExpenseItemClickListener = clickListener;
-        mExpenseList = expenses;
+        this.mExpenseList = expenses;
+    }
+
+    public void setExpenseList(List<Expense> expenseList) {
+        mExpenseList = expenseList;
     }
 
     @NonNull
     @Override
     public ExpenseHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View expenseView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.category_expenses_item, viewGroup, false);
-        return new ExpenseHolder(expenseView);
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+        View expenseItem = inflater.inflate(R.layout.category_expenses_item, viewGroup, false);
+
+        return new ExpenseHolder(expenseItem);
     }
 
     @Override
@@ -60,7 +62,6 @@ public class CategoryExpensesAdapter extends RecyclerView.Adapter<CategoryExpens
 
         @Override
         public void onClick(View v) {
-            Navigation.findNavController(v).navigate(R.id.editExpense);
             mExpenseItemClickListener.onExpenseItemClicked(getAdapterPosition());
         }
     }

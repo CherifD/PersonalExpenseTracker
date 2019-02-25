@@ -24,6 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Category Category Category"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
         app:layout_constraintEnd_toStartOf="@+id/tv_sumary_list_item_amount"
         app:layout_constraintHorizontal_bias="0.5"

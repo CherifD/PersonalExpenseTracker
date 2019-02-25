@@ -1,14 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewExpense">
+    tools:context=".NewExpenseFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <Spinner
+        android:id="@+id/spinner_category_new_expense"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="64dp"
+        android:layout_margin="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/et_business_name_new_expense"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_margin="40dp"
+        android:hint="@string/business_name_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_category_new_expense" />
+
+    <EditText
+        android:id="@+id/et_amount_new_expense"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_margin="40dp"
+        android:hint="@string/amount_hint"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_business_name_new_expense" />
+
+    <Button
+        android:id="@+id/btn_save_new_expense"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="48dp"
+        android:text="@string/save_btn_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_amount_new_expense" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,27 +1,22 @@
 package com.cherifcodes.personalexpensetracker;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.navigation.Navigation;
-
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PieSummary.OnFragmentInteractionListener} interface
+ * {@link EditExpenseFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PieSummary#newInstance} factory method to
+ * Use the {@link EditExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PieSummary extends Fragment {
+public class EditExpenseFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,7 +28,7 @@ public class PieSummary extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public PieSummary() {
+    public EditExpenseFragment() {
         // Required empty public constructor
     }
 
@@ -43,11 +38,11 @@ public class PieSummary extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PieSummary.
+     * @return A new instance of fragment EditExpenseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PieSummary newInstance(String param1, String param2) {
-        PieSummary fragment = new PieSummary();
+    public static EditExpenseFragment newInstance(String param1, String param2) {
+        EditExpenseFragment fragment = new EditExpenseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,44 +63,14 @@ public class PieSummary extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View fragmentView = inflater.inflate(R.layout.fragment_pie_summary, container, false);
-        FloatingActionButton fab = fragmentView.findViewById(R.id.fab_pie_summary);
+        return inflater.inflate(R.layout.fragment_edit_expense, container, false);
 
-        /////////////////////////// Change fab's background color programmatically
-        //fab.setBackgroundColor(Color.BLUE); No visible change
-        //fab.setBackgroundResource(0);
-        //fab.setBackgroundColor(Color.BLUE); Still no visible change
-
-        //fab.setImageResource(0); // Removed the image
-
-        //////////////
-        //Attach navigation to fab button
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Navigation.createNavigateOnClickListener(R.id.listSummary, null);
-                Navigation.findNavController(getActivity(), R.id.fragment).navigate(R.id.listSummary);
-            }
-        });
-
-        return fragmentView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
         }
     }
 

@@ -7,16 +7,19 @@
 
     <fragment
         android:id="@+id/pieSummary"
-        android:name="com.cherifcodes.personalexpensetracker.PieSummary"
+        android:name="com.cherifcodes.personalexpensetracker.PieSummaryFragment"
         android:label="fragment_pie_summary"
         tools:layout="@layout/fragment_pie_summary" >
         <action
             android:id="@+id/action_pieSummary_to_listSummary"
-            app:destination="@id/listSummary" />
+            app:destination="@id/categoryTotals" />
+        <action
+            android:id="@+id/action_pieSummary_to_newExpense"
+            app:destination="@id/newExpense" />
     </fragment>
     <fragment
-        android:id="@+id/listSummary"
-        android:name="com.cherifcodes.personalexpensetracker.ListSummary"
+        android:id="@+id/categoryTotals"
+        android:name="com.cherifcodes.personalexpensetracker.CategoryTotalsFragment"
         android:label="fragment_list_summary"
         tools:layout="@layout/fragment_list_summary" >
         <action
@@ -25,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/categoryExpenses"
-        android:name="com.cherifcodes.personalexpensetracker.CategoryExpenses"
+        android:name="com.cherifcodes.personalexpensetracker.CategoryExpensesFragment"
         android:label="fragment_category_expenses"
         tools:layout="@layout/fragment_category_expenses" >
         <action
@@ -37,12 +40,16 @@
     </fragment>
     <fragment
         android:id="@+id/newExpense"
-        android:name="com.cherifcodes.personalexpensetracker.NewExpense"
+        android:name="com.cherifcodes.personalexpensetracker.NewExpenseFragment"
         android:label="fragment_new_expense"
-        tools:layout="@layout/fragment_new_expense" />
+        tools:layout="@layout/fragment_new_expense" >
+        <action
+            android:id="@+id/action_newExpense_to_listSummary"
+            app:destination="@id/categoryTotals" />
+    </fragment>
     <fragment
         android:id="@+id/editExpense"
-        android:name="com.cherifcodes.personalexpensetracker.EditExpense"
+        android:name="com.cherifcodes.personalexpensetracker.EditExpenseFragment"
         android:label="fragment_edit_expense"
         tools:layout="@layout/fragment_edit_expense" />
 
