@@ -37,7 +37,8 @@ public class CategoryExpensesAdapter extends RecyclerView.Adapter<CategoryExpens
 
     @Override
     public void onBindViewHolder(@NonNull ExpenseHolder expenseHolder, int i) {
-        expenseHolder.dateTv.setText(String.valueOf(mExpenseList.get(i).getDate()));
+        String expenseDate = String.valueOf(mExpenseList.get(i).getDate().toLocalDate());
+        expenseHolder.dateTv.setText(expenseDate);
         expenseHolder.businessNameTv.setText(mExpenseList.get(i).getBusinessName());
         expenseHolder.amountTv.setText(String.valueOf(mExpenseList.get(i).getAmount()));
 

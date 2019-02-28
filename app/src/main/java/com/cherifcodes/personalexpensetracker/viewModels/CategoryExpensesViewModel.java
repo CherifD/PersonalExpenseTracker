@@ -7,7 +7,6 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.cherifcodes.personalexpensetracker.appConstants.PeriodConstants;
 import com.cherifcodes.personalexpensetracker.backend.Expense;
@@ -19,7 +18,13 @@ public class CategoryExpensesViewModel extends AndroidViewModel {
 
     private Repository mRepository;
     private LiveData<List<Expense>> mThisMonthsExpenseList;
+    private LiveData<List<Expense>> mThisWeeksExpenseList;
+    private LiveData<List<Expense>> mThisYearsExpenseList;
     private MutableLiveData<String> mCategory;
+
+    private LiveData<Double> mThisCategoryTotalForThisWeek;
+    private LiveData<Double> mThisCategoryTotalForThisMonth;
+    private LiveData<Double> mThisCategoryTotalForThisYear;
 
     public CategoryExpensesViewModel(@NonNull Application application, String category) {
         super(application);
@@ -27,37 +32,47 @@ public class CategoryExpensesViewModel extends AndroidViewModel {
         mCategory = new MutableLiveData<>();
         mCategory.setValue(category);
 
-        mThisMonthsExpenseList = mRepository.getThisMonthExpenses(mCategory.getValue());
+        updateExpenseList();
     }
 
     public void setCategory(String category) {
         mCategory.setValue(category);
+        updateExpenseList();
     }
 
-    public LiveData<List<Expense>> getThisMonthExpenseList() {
+    public LiveData<List<Expense>> getThisWeeksExpenseList() {
+        return mThisWeeksExpenseList;
+    }
+
+    public LiveData<List<Expense>> getThisMonthsExpenseList() {
         return mThisMonthsExpenseList;
     }
 
-    public void updateThisMonthExpenseList() {
-        mThisMonthsExpenseList = mRepository.getThisMonthExpenses(mCategory.getValue());
+    public LiveData<List<Expense>> getThisYearsExpenseList() {
+        return mThisYearsExpenseList;
     }
 
-    /*public LiveData<List<Expense>> getExpenses(String period) {
+    public LiveData<Double> getThisCategoryTotalForThisWeek() {
+        return mThisCategoryTotalForThisWeek;
+    }
 
-        if (TextUtils.isEmpty(period))
-            throw new IllegalArgumentException("Invalid period.");
+    public LiveData<Double> getThisCategoryTotalForThisMonth() {
+        return mThisCategoryTotalForThisMonth;
+    }
 
-        if (period.equals(PeriodConstants.THIS_MONTH))
-            mThisMonthsExpenseList = mRepository.getThisMonthExpenses(mCategory);
-        else if (period.equals(PeriodConstants.THIS_YEAR)) {
-            //mThisMonthsExpenseList = mRepository.getThisMonthExpenses(mCategory);
-        } else {
-            //mThisMonthsExpenseList = mRepository.getThisMonthExpenses(mCategory);
-        }
+    public LiveData<Double> getThisCategoryTotalForThisYear() {
+        return mThisCategoryTotalForThisYear;
+    }
 
-        return mThisMonthsExpenseList;
-    }*/
+    public void updateExpenseList() {
+        mThisMonthsExpenseList = mRepository.getThisMonthsExpenses(mCategory.getValue());
+        mThisWeeksExpenseList = mRepository.getThisWeeksExpenses(mCategory.getValue());
+        mThisYearsExpenseList = mRepository.getThisYearsExpenses(mCategory.getValue());
 
+        mThisCategoryTotalForThisWeek = mRepository.getThisCategoryTotalForThisWeek(mCategory.getValue());
+        mThisCategoryTotalForThisMonth = mRepository.getThisCategoryTotalForThisMonth(mCategory.getValue());
+        mThisCategoryTotalForThisYear = mRepository.getThiCategoryTotalForThisYear(mCategory.getValue());
+    }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
         @NonNull

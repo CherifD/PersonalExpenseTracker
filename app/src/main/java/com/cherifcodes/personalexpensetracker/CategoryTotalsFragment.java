@@ -70,8 +70,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
        // mCategoryTotalsAdapter = new CategoryTotalsAdapter(mCategoryTotalsList, this);
 
 
-        System.out.println("The size of CategoryTotalsList is !!: " + mCategoryTotalsList.size());
-
         mCategoryTotalsAdapter = new CategoryTotalsAdapter(mCategoryTotalsList, this);
         mRecyclerView.setAdapter(mCategoryTotalsAdapter);
 
@@ -108,8 +106,9 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
     public void onCategoryTotalItemClicked(int itemPosition) {
         String clickedCategory = mCategoryTotalsList.get(itemPosition).getCategoryName();
 
+
         mCategoryExpensesViewModel.setCategory(mCategoryTotalsList.get(itemPosition).getCategoryName());
-        mCategoryExpensesViewModel.updateThisMonthExpenseList();
+        mCategoryExpensesViewModel.updateExpenseList();
 
         mOnFragmentInteractionListener.navigateToCategoryExpensesFragment(clickedCategory);
     }

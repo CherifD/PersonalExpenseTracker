@@ -29,19 +29,19 @@ public interface ExpenseDao {
 
     @Query("SELECT * FROM Expense WHERE strftime('%Y', date) = strftime('%Y', 'now') " +
             "AND category = :category " +
-            "ORDER BY date")
+            "ORDER BY date DESC")
     LiveData<List<Expense>> getThisYearExpenses(String category);
 
     @Query("SELECT * FROM Expense WHERE date BETWEEN datetime('now', 'start of month') " +
             "AND datetime('now', 'start of month', '1 month') " +
             "AND category = :category " +
-            "ORDER BY id ASC")
+            "ORDER BY date DESC")
     LiveData<List<Expense>> getThisMonthExpenses(String category);
 
     @Query("SELECT * FROM Expense WHERE strftime('%W', date) = strftime('%W', 'now') " +
             "AND strftime('%Y', date) = strftime('%Y', 'now') " +
             "AND category = :category " +
-            "ORDER BY date")
+            "ORDER BY date DESC")
     LiveData<List<Expense>> getThisWeekExpenses(String category);
 
     @Query("SELECT COUNT(*) FROM Expense")
@@ -68,7 +68,6 @@ public interface ExpenseDao {
             "GROUP BY category")
     List<CategoryTotal> getCurrMonthCategoryTotals();
 
-
     @Query("SELECT SUM(amount) from Expense WHERE strftime('%W', date) = strftime('%W', 'now')")
     double getThisWeekTotal();
 
@@ -78,4 +77,17 @@ public interface ExpenseDao {
             "GROUP BY category")
     List<CategoryTotal> getCurrWeekTotals();
 
+    @Query("SELECT SUM(amount) FROM Expense WHERE category = :category " +
+            "AND strftime('%W', date) = strftime('%W', 'now') " +
+            "AND strftime('%Y', date) = strftime('%Y', 'now')")
+    LiveData<Double> getThisCategoryTotalForThisWeek(String category);
+
+    @Query("SELECT SUM(amount) FROM Expense WHERE category = :category " +
+            "AND strftime('%m', date) = strftime('%m', 'now') " +
+            "AND strftime('%Y', date) = strftime('%Y', 'now')" )
+    LiveData<Double> getThisCategoryTotalForThisMonth(String category);
+
+    @Query("SELECT SUM(amount) FROM Expense WHERE category = :category " +
+            "AND strftime('%Y', date) = strftime('%Y', 'now')" )
+    LiveData<Double> getThisCategoryTotalForThisYear(String category);
 }

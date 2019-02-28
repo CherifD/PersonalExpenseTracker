@@ -7,5 +7,5 @@ public interface OnFragmentInteractionListener {
     void navigateToCategoryExpensesFragment(String category);
     void navigateToCategoryTotalsFragment();
     void navigateToNewExpenseFragment();
-    void navigateTEditExpenseFragment();
+    void navigateToEditExpenseFragment();
 }

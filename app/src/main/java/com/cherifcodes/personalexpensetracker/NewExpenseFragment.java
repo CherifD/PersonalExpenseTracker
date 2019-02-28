@@ -69,6 +69,51 @@ public class NewExpenseFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         mRepository = Repository.getInstance(getActivity().getApplication());
+
+        /*Expense ex0 = new Expense("Education", "NC State", 708.69,
+                LocalDateTime.of(2019, 02, 25, 2, 23) );
+        mRepository.insertExpense(ex0);
+
+        Expense ex1 = new Expense("Sports", "Planet fitness", 53.68,
+                LocalDateTime.of(2019, 02, 26, 2, 23) );
+        mRepository.insertExpense(ex1);*/
+
+        //Insert dummy Expenses for testing
+        /*Expense ex0 = new Expense("Education", "NC State", 708.69,
+                LocalDateTime.of(2019, 01, 25, 2, 23) );
+        mRepository.insertExpense(ex0);
+
+        Expense ex1 = new Expense("Recreation", "Museum", 78.56,
+                LocalDateTime.of(2019, 04, 01, 2, 23) );
+        mRepository.insertExpense(ex1);
+
+        Expense ex2 = new Expense("Clothes", "Target", 90.34,
+                LocalDateTime.of(2019, 05, 02, 2, 23) );
+        mRepository.insertExpense(ex2);
+
+        Expense ex3 = new Expense("Clothes", "Target", 20.29,
+                LocalDateTime.of(2019, 03, 03, 2, 23) );
+        mRepository.insertExpense(ex2);
+
+        Expense ex4 = new Expense("Health", "Rite-Aid", 89.45,
+                LocalDateTime.of(2019, 06, 04, 2, 23) );
+        mRepository.insertExpense(ex4);
+
+        Expense ex5 = new Expense("Health", "Rite-Aid", 120,
+                LocalDateTime.of(2019, 04, 11, 2, 23) );
+        mRepository.insertExpense(ex5);
+
+        Expense ex6 = new Expense("Food", "Wal-Mart", 100,
+                LocalDateTime.of(2019, 05, 16, 2, 23) );
+        mRepository.insertExpense(ex6);
+
+        Expense ex7 = new Expense("Transportation", "Exxon Mobile", 27.90,
+                LocalDateTime.of(2019, 07, 17, 2, 23) );
+        mRepository.insertExpense(ex7);
+
+        Expense ex8 = new Expense("Food", "Food Lion", 78.32,
+                LocalDateTime.of(2019, 02, 01, 2, 23) );
+        mRepository.insertExpense(ex7);*/
         //mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
     }
 
@@ -118,6 +163,7 @@ public class NewExpenseFragment extends Fragment {
                     mBusinessNameEt.getText().toString(),
                     Double.parseDouble(mAmountEt.getText().toString()),
                     LocalDateTime.now());
+
 
             //Insert the new Expense into the database
             Repository repository = Repository.getInstance(getActivity().getApplication());

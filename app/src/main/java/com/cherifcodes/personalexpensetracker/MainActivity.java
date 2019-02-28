@@ -5,8 +5,11 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.OnFragmentInteractionListener;
+import com.cherifcodes.personalexpensetracker.appConstants.PeriodConstants;
 import com.cherifcodes.personalexpensetracker.backend.CategoryTotal;
 import com.cherifcodes.personalexpensetracker.backend.Expense;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryExpensesViewModel;
@@ -41,15 +44,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
             }
         });
-
-        mCategoryExpensesViewModel.getThisMonthExpenseList().observe(
-                this, new Observer<List<Expense>>() {
-                    @Override
-                    public void onChanged(@Nullable List<Expense> expenses) {
-
-                    }
-                }
-        );
     }
 
     @Override
@@ -60,8 +54,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     @Override
     public void navigateToCategoryExpensesFragment(String category) {
         mCategoryExpensesViewModel.setCategory(category);
-        mCategoryExpensesViewModel.updateThisMonthExpenseList();
-
         Navigation.findNavController(this, R.id.fragment).navigate(R.id.categoryExpenses);
     }
 
@@ -76,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     @Override
-    public void navigateTEditExpenseFragment() {
+    public void navigateToEditExpenseFragment() {
         Navigation.findNavController(this, R.id.fragment).navigate(R.id.editExpense);
     }
 }
