@@ -54,9 +54,9 @@ public interface ExpenseDao {
 
     // Below are the queries for category totals lists retrieval
     @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
-            "WHERE strftime('%Y', date) = strftime('Y', 'now') " +
+            "WHERE strftime('%Y', date) = strftime('%Y', 'now') " +
             "GROUP BY category")
-    LiveData<List<CategoryTotal>> getCurrYearCategoryTotalList();
+    LiveData<List<CategoryTotal>> getCurrYearsCategoryTotalList();
 
     @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
             " WHERE strftime('%Y', date) = strftime('%Y', 'now') " +

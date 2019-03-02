@@ -71,15 +71,15 @@ public class NewExpenseFragment extends Fragment {
         mRepository = Repository.getInstance(getActivity().getApplication());
 
         /*Expense ex0 = new Expense("Education", "NC State", 708.69,
-                LocalDateTime.of(2019, 02, 25, 2, 23) );
+                LocalDateTime.of(2019, 03, 25, 2, 23) );
         mRepository.insertExpense(ex0);
 
         Expense ex1 = new Expense("Sports", "Planet fitness", 53.68,
-                LocalDateTime.of(2019, 02, 26, 2, 23) );
+                LocalDateTime.of(2019, 03, 26, 2, 23) );
         mRepository.insertExpense(ex1);*/
 
         //Insert dummy Expenses for testing
-        /*Expense ex0 = new Expense("Education", "NC State", 708.69,
+       /* Expense ex0 = new Expense("Education", "NC State", 708.69,
                 LocalDateTime.of(2019, 01, 25, 2, 23) );
         mRepository.insertExpense(ex0);
 
@@ -112,7 +112,7 @@ public class NewExpenseFragment extends Fragment {
         mRepository.insertExpense(ex7);
 
         Expense ex8 = new Expense("Food", "Food Lion", 78.32,
-                LocalDateTime.of(2019, 02, 01, 2, 23) );
+                LocalDateTime.of(2020, 02, 01, 2, 23) );
         mRepository.insertExpense(ex7);*/
         //mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
     }
@@ -132,8 +132,6 @@ public class NewExpenseFragment extends Fragment {
             public void onClick(View v) {
 
                 saveExpense();
-                System.out.print("New Expense Added!!!!!!!!!");
-                Toast.makeText(getActivity(), "No error while saving!", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -149,7 +147,6 @@ public class NewExpenseFragment extends Fragment {
         return newExpenseView;
     }
 
-
     private boolean isValidExpense() {
         return !(TextUtils.isEmpty(mSpinner.getSelectedItem().toString()) ||
             TextUtils.isEmpty(mBusinessNameEt.getText()) ||
@@ -158,30 +155,21 @@ public class NewExpenseFragment extends Fragment {
     }
 
     public void saveExpense() {
-        //if (isValidExpense()) {
+        if (isValidExpense()) {
             final Expense newExpense = new Expense(mSpinner.getSelectedItem().toString(),
                     mBusinessNameEt.getText().toString(),
                     Double.parseDouble(mAmountEt.getText().toString()),
                     LocalDateTime.now());
 
-
             //Insert the new Expense into the database
-            Repository repository = Repository.getInstance(getActivity().getApplication());
-            repository.insertExpense(newExpense);
+            mRepository.insertExpense(newExpense);
 
-            //mViewModel.insertExpense(newExpense);
-            /*new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected Void doInBackground(Void... voids) {
-                    mRepository.insertExpense(newExpense);
-                    System.out.print("Inserted New Expense is: " + newExpense);
-                    return null;
-                }
-            }.execute();
-*/          //Reset the new Expense form
+            //Reset the new Expense form
             clearNewExpenseData();
+        } else {
+            Toast.makeText(getContext(), "Invalid expense.", Toast.LENGTH_LONG).show();
+        }
     }
-
 
     private void clearNewExpenseData() {
         mAmountEt.setText("");

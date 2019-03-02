@@ -29,13 +29,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Displays expenses totals grouped by category
  */
 public class CategoryTotalsFragment extends Fragment implements CategoryTotalItemClickListener {
 
-    //private List<CategoryTotal> mCategoryTotalsList = new ArrayList<>();
     private double mCurrWeeksCategoryTotal = 0.0;
     private double mCurrMonthsCategoryTotal;
     private double mCurrYearsCategoryTotal;
@@ -84,6 +82,9 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         // Inflate the layout for this fragment
         View fragmentView =  inflater.inflate(R.layout.fragment_category_totals, container, false);
         mRecyclerView = fragmentView.findViewById(R.id.reclView_category_totals);
+        mCurrCategoryTotalLabel_tv = fragmentView.findViewById(R.id.tv_category_totals_label);
+        mCurrCategoryTotal_tv = fragmentView.findViewById(R.id.tv_category_totals_total);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mCategoryTotalsAdapter = new CategoryTotalsAdapter(mCurrWeeksCategoryList, this);
@@ -91,7 +92,8 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         mCategoryTotalViewModel = ViewModelProviders.of(getActivity()).get(CategoryTotalViewModel.class);
 
         ////VIPT!!!! THE FIRST PARAMETER OF observe() MUST BE getActivity, not THIS!!!
-        ///OTHERWISE THE RETURNED LIST WILL BE EMPTY OR NULL
+        ///OTHERWISE THE RETURNED LIST WILL BE EMPTY OR NULL, Or the new Expense fragment will
+        //throw an Exception
         //mCategoryTotalViewModel.getEntireCategoryTotalsList().observe(this, new Observer<List<CategoryTotal>>() {
        // mCategoryTotalsAdapter = new CategoryTotalsAdapter(mCategoryTotalsList, this);
         mCategoryTotalViewModel.getCurrWeeksCategoryTotalList().observe(getActivity(),
@@ -121,39 +123,24 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                 });
 
         listenToCategoryTotals();
-
-        mCurrCategoryTotalLabel_tv = fragmentView.findViewById(R.id.tv_category_totals_label);
-        mCurrCategoryTotal_tv = fragmentView.findViewById(R.id.tv_category_totals_total);
-        mCurrCategoryTotalLabel_tv.setText(R.string.this_week);
-        mCurrCategoryTotal_tv.setText(mDf.format(mCurrWeeksCategoryTotal));
-
-        /*mCategoryTotalsAdapter = new CategoryTotalsAdapter(mCategoryTotalsList, this);
-        mRecyclerView.setAdapter(mCategoryTotalsAdapter);
-
-        mCategoryTotalViewModel.getAllCategoryTotals().observe(getActivity(), new Observer<List<CategoryTotal>>() {
-            @Override
-            public void onChanged(@Nullable List<CategoryTotal> categoryTotals) {
-                mCategoryTotalsList = categoryTotals;
-                mCategoryTotalsAdapter.setCategoryTotalsList(mCategoryTotalsList);
-                mRecyclerView.setAdapter(mCategoryTotalsAdapter);
-            }
-        });
-*/
         return fragmentView;
     }
 
     private void listenToCategoryTotals() {
         mCategoryTotalViewModel.getCurrWeeksCategoryTotal().observe(
-                getActivity(), new Observer<Double>() {
+                this, new Observer<Double>() {
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
-                        if (aDouble != null)
+                        if (aDouble != null) {
                             mCurrWeeksCategoryTotal = aDouble;
+                        }
+                        displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label),
+                                mCurrWeeksCategoryTotal);
                     }
                 }
         );
 
-        mCategoryTotalViewModel.getCurrMonthsCategoryTotal().observe(getActivity(),
+        mCategoryTotalViewModel.getCurrMonthsCategoryTotal().observe(this,
                 new Observer<Double>() {
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
@@ -162,7 +149,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                     }
                 });
 
-        mCategoryTotalViewModel.getCurrYearsCategoryTotal().observe(getActivity(),
+        mCategoryTotalViewModel.getCurrYearsCategoryTotal().observe(this,
                 new Observer<Double>() {
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
@@ -192,6 +179,11 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         inflater.inflate(R.menu.category_expenses_menu, menu);
     }
 
+    private void displayCombinedCategoryTotal(String period, double categoryTotal) {
+        mCurrCategoryTotal_tv.setText(mDf.format(categoryTotal));
+        mCurrCategoryTotalLabel_tv.setText(period);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_cat_expense_week) {
@@ -200,29 +192,21 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
             mCategoryTotalsAdapter.setCategoryTotalsList(mCurrWeeksCategoryList);
             mRecyclerView.setAdapter(mCategoryTotalsAdapter);
 
-            mCurrCategoryTotal_tv.setText(mDf.format(mCurrWeeksCategoryTotal));
-            mCurrCategoryTotalLabel_tv.setText(getString(R.string.this_weeks_total_label));
+            displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label), mCurrWeeksCategoryTotal);
         } else if (item.getItemId() == R.id.menu_cat_expense_month) {
             mSelectedPeriod = PeriodConstants.THIS_MONTH;
 
             mCategoryTotalsAdapter.setCategoryTotalsList(mCurrMonthsCategoryList);
-
-            /////////////////
-
-            Log.i("CategoryTotalFragment", "The size of the month list is: " + mCurrMonthsCategoryList.size());
-            ////////
             mRecyclerView.setAdapter(mCategoryTotalsAdapter);
 
-            mCurrCategoryTotal_tv.setText(mDf.format(mCurrMonthsCategoryTotal));
-            mCurrCategoryTotalLabel_tv.setText(getString(R.string.this_months_total_label));
+            displayCombinedCategoryTotal(getString(R.string.this_months_total_label), mCurrMonthsCategoryTotal);
         } else {
             mSelectedPeriod = PeriodConstants.THIS_YEAR;
 
             mCategoryTotalsAdapter.setCategoryTotalsList(mCurrYearsCategoryList);
             mRecyclerView.setAdapter(mCategoryTotalsAdapter);
 
-            mCurrCategoryTotal_tv.setText(mDf.format(mCurrYearsCategoryTotal));
-            mCurrCategoryTotalLabel_tv.setText(getString(R.string.this_years_total_label));
+            displayCombinedCategoryTotal(getString(R.string.this_years_total_label), mCurrYearsCategoryTotal);
         }
         return true;
     }

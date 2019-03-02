@@ -2,11 +2,7 @@ package com.cherifcodes.personalexpensetracker.backend;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -71,7 +67,7 @@ public class Repository {
     }
 
     public LiveData<List<CategoryTotal>> getCurrYearsCategoryTotalList() {
-        return mDb.expenseDao().getCurrYearCategoryTotalList();
+        return mDb.expenseDao().getCurrYearsCategoryTotalList();
     }
 
     public LiveData<Double> getCurrWeeksCategoryTotal() {
