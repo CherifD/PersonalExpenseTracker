@@ -62,6 +62,30 @@ public class Repository {
         return mDb.expenseDao().getThisCategoryTotalForThisYear(category);
     }
 
+    public LiveData<List<CategoryTotal>> getCurrWeeksCategoryTotalList() {
+        return mDb.expenseDao().getCurrWeeksCategoryTotalList();
+    }
+
+    public LiveData<List<CategoryTotal>> getCurrMonthsCategoryTotalList() {
+        return mDb.expenseDao().getCurrMonthsCategoryTotalList();
+    }
+
+    public LiveData<List<CategoryTotal>> getCurrYearsCategoryTotalList() {
+        return mDb.expenseDao().getCurrYearCategoryTotalList();
+    }
+
+    public LiveData<Double> getCurrWeeksCategoryTotal() {
+        return mDb.expenseDao().getCurrWeeksCategoryTotal();
+    }
+
+    public LiveData<Double> getCurrMonthsCategoryTotal() {
+        return mDb.expenseDao().getCurrMonthsCategoryTotal();
+    }
+
+    public LiveData<Double> getCurrYearsCategoryTotal() {
+        return mDb.expenseDao().getCurrYearsCategoryTotal();
+    }
+
     /**
      * AsyncTask class for inserting Expense objects into database
      */

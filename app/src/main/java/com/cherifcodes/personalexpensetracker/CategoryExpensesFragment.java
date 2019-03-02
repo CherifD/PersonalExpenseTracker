@@ -42,9 +42,9 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
     private List<Expense> mThisMonthsExpenseList = new ArrayList<>();
     private List<Expense> mThisYearsExpenseList = new ArrayList<>();
 
-    private double mThisWeeksTotal;
-    private double mThisMonthsTotal;
-    private double mThisYearsTotal;
+    private double mThisWeeksExpenseTotal;
+    private double mThisMonthsExpenseTotal;
+    private double mThisYearsExpenseTotal;
 
     private TextView mExpenseTotal_tv;
     private TextView mExpensePeriod_tv;
@@ -132,8 +132,8 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
                         if (aDouble == null) {
                             mExpenseTotal_tv.setText("0.00");
                         } else {
-                            mThisWeeksTotal = aDouble;
-                            mExpenseTotal_tv.setText(mDf.format(mThisWeeksTotal));
+                            mThisWeeksExpenseTotal = aDouble;
+                            mExpenseTotal_tv.setText(mDf.format(mThisWeeksExpenseTotal));
                         }
                     }
                 });
@@ -145,7 +145,7 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
                         if (aDouble == null) {
                             mExpenseTotal_tv.setText("0.00");
                         } else {
-                            mThisMonthsTotal = aDouble;
+                            mThisMonthsExpenseTotal = aDouble;
                         }
                     }
                 });
@@ -157,7 +157,7 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
                         if (aDouble == null) {
                             mExpenseTotal_tv.setText("0.00");
                         } else {
-                            mThisYearsTotal = aDouble;
+                            mThisYearsExpenseTotal = aDouble;
                         }
                     }
                 });
@@ -197,19 +197,19 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
             mCategoryExpensesAdapter.setExpenseList(mThisWeeksExpenseList);
             mRecyclerView.setAdapter(mCategoryExpensesAdapter);
 
-            mExpenseTotal_tv.setText(mDf.format(mThisWeeksTotal));
+            mExpenseTotal_tv.setText(mDf.format(mThisWeeksExpenseTotal));
             mExpensePeriod_tv.setText(getString(R.string.this_weeks_total_label));
         } else if (item.getItemId() == R.id.menu_cat_expense_month) {
             mCategoryExpensesAdapter.setExpenseList(mThisMonthsExpenseList);
             mRecyclerView.setAdapter(mCategoryExpensesAdapter);
 
-            mExpenseTotal_tv.setText(mDf.format(mThisMonthsTotal));
+            mExpenseTotal_tv.setText(mDf.format(mThisMonthsExpenseTotal));
             mExpensePeriod_tv.setText(getString(R.string.this_months_total_label));
         } else {
             mCategoryExpensesAdapter.setExpenseList(mThisYearsExpenseList);
             mRecyclerView.setAdapter(mCategoryExpensesAdapter);
 
-            mExpenseTotal_tv.setText(mDf.format(mThisYearsTotal));
+            mExpenseTotal_tv.setText(mDf.format(mThisYearsExpenseTotal));
             mExpensePeriod_tv.setText(getString(R.string.this_years_total_label));
         }
         return true;

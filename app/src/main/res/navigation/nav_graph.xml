@@ -21,7 +21,7 @@
         android:id="@+id/categoryTotals"
         android:name="com.cherifcodes.personalexpensetracker.CategoryTotalsFragment"
         android:label="fragment_list_summary"
-        tools:layout="@layout/fragment_list_summary" >
+        tools:layout="@layout/fragment_category_totals" >
         <action
             android:id="@+id/action_listSummary_to_categoryExpenses"
             app:destination="@id/categoryExpenses" />

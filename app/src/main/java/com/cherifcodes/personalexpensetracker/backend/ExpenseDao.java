@@ -51,31 +51,32 @@ public interface ExpenseDao {
             "AND datetime('now', 'start of year', '1 year')")
     double getThisYearTotal();
 
+
+    // Below are the queries for category totals lists retrieval
     @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
-            "WHERE date BETWEEN datetime('now', 'start of year') " +
-            "AND datetime('now', 'start of year', '1 year') " +
+            "WHERE strftime('%Y', date) = strftime('Y', 'now') " +
             "GROUP BY category")
-    List<CategoryTotal> getCurrYearCategoryTotals();
-
-
-    @Query("SELECT SUM(amount) from Expense WHERE date BETWEEN datetime('now', 'start of month') " +
-            "AND datetime('now', 'start of month', '1 month')")
-    double getThisMonthTotal();
+    LiveData<List<CategoryTotal>> getCurrYearCategoryTotalList();
 
     @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
+            " WHERE strftime('%Y', date) = strftime('%Y', 'now') " +
+            " AND strftime('%m', date) = strftime('%m', 'now')" +
+            " Group By category")
+    LiveData<List<CategoryTotal>> getCurrMonthsCategoryTotalList();
+
+    @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
+            " WHERE strftime('%Y', date) = strftime('%Y', 'now') " +
+            " AND strftime('%W', date) = strftime('%W', 'now')" +
+            " Group By category")
+    LiveData<List<CategoryTotal>> getCurrWeeksCategoryTotalList();
+
+
+   /* @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
             "WHERE date BETWEEN datetime('now', 'start of month') " +
             "AND datetime('now', 'start of month', '1 month') " +
             "GROUP BY category")
-    List<CategoryTotal> getCurrMonthCategoryTotals();
+    LiveData<List<Double> getCurrMonthCategoryTotals();*/
 
-    @Query("SELECT SUM(amount) from Expense WHERE strftime('%W', date) = strftime('%W', 'now')")
-    double getThisWeekTotal();
-
-    @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
-            "WHERE strftime('%W', date) = strftime('%W', 'now') " +
-            "AND strftime('%Y', date) = strftime('%Y', 'now') " +
-            "GROUP BY category")
-    List<CategoryTotal> getCurrWeekTotals();
 
     @Query("SELECT SUM(amount) FROM Expense WHERE category = :category " +
             "AND strftime('%W', date) = strftime('%W', 'now') " +
@@ -90,4 +91,22 @@ public interface ExpenseDao {
     @Query("SELECT SUM(amount) FROM Expense WHERE category = :category " +
             "AND strftime('%Y', date) = strftime('%Y', 'now')" )
     LiveData<Double> getThisCategoryTotalForThisYear(String category);
+
+    @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
+            "WHERE strftime('%W', date) = strftime('%W', 'now') " +
+            "AND strftime('%Y', date) = strftime('%Y', 'now') " +
+            "GROUP BY category")
+    List<CategoryTotal> getCurrWeekTotals();
+
+    @Query("SELECT SUM(amount) from Expense WHERE " +
+            "strftime('%W', date) == strftime('%W', 'now') " +
+            "AND strftime('%Y', date) == strftime('%Y', 'now')")
+    LiveData<Double> getCurrWeeksCategoryTotal();
+
+    @Query("SELECT SUM(amount) from Expense WHERE strftime('%Y', date) == strftime('%Y', 'now') " +
+            "AND strftime('%m', date) == strftime('%m', 'now')" )
+    LiveData<Double> getCurrMonthsCategoryTotal();
+
+    @Query("SELECT SUM(amount) from Expense WHERE strftime('%Y', date) == strftime('%Y', 'now')" )
+    LiveData<Double> getCurrYearsCategoryTotal();
 }
