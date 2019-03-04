@@ -70,12 +70,12 @@ public class NewExpenseFragment extends Fragment {
         }
         mRepository = Repository.getInstance(getActivity().getApplication());
 
-        /*Expense ex0 = new Expense("Education", "NC State", 708.69,
-                LocalDateTime.of(2019, 03, 25, 2, 23) );
-        mRepository.insertExpense(ex0);
+        /*Expense ex0 = new Expense("Education", "Udemy", 22.69,
+                LocalDateTime.of(2019, 03, 04, 2, 23) );
+        mRepository.insertExpense(ex0);*/
 
-        Expense ex1 = new Expense("Sports", "Planet fitness", 53.68,
-                LocalDateTime.of(2019, 03, 26, 2, 23) );
+       /* Expense ex1 = new Expense("Sports", "Dick's", 89.65,
+                LocalDateTime.of(2019, 03, 4, 11, 59) );
         mRepository.insertExpense(ex1);*/
 
         //Insert dummy Expenses for testing

@@ -38,12 +38,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         mCategoryExpensesViewModel = ViewModelProviders.of(
                 this, factory).get(CategoryExpensesViewModel.class);
 
-        /*mCategoryTotalViewModel.getAllCategoryTotals().observe(this, new Observer<List<CategoryTotal>>() {
-            @Override
-            public void onChanged(@Nullable List<CategoryTotal> categoryTotals) {
-
-            }
-        });*/
     }
 
     @Override
