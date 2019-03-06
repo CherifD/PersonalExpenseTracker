@@ -1,6 +1,7 @@
 package com.cherifcodes.personalexpensetracker;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.cherifcodes.personalexpensetracker.adaptersAndListeners.CategoryExpen
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.ExpenseItemClickListener;
 import com.cherifcodes.personalexpensetracker.backend.Expense;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryExpensesViewModel;
+import com.cherifcodes.personalexpensetracker.viewModels.EditExpenseViewModel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -35,12 +37,15 @@ import androidx.navigation.Navigation;
 public class CategoryExpensesFragment extends Fragment implements ExpenseItemClickListener {
 
     private CategoryExpensesViewModel mCategoryExpensesViewModel;
+    private EditExpenseViewModel mEditExpenseViewModel;
+
     private RecyclerView mRecyclerView;
     private CategoryExpensesAdapter mCategoryExpensesAdapter;
 
     private List<Expense> mThisWeeksExpenseList = new ArrayList<>();
     private List<Expense> mThisMonthsExpenseList = new ArrayList<>();
     private List<Expense> mThisYearsExpenseList = new ArrayList<>();
+    private List<Expense> mCurrUserSelectedExpenseList = mThisWeeksExpenseList;
 
     private double mThisWeeksExpenseTotal;
     private double mThisMonthsExpenseTotal;
@@ -60,6 +65,8 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mEditExpenseViewModel = ViewModelProviders.of(getActivity()).get(EditExpenseViewModel.class);
     }
 
     @Override
@@ -88,7 +95,8 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
             @Override
             public void onChanged(@Nullable List<Expense> expenses) {
                 mThisWeeksExpenseList = expenses;
-                mCategoryExpensesAdapter.setExpenseList(expenses);
+                mCurrUserSelectedExpenseList = mThisWeeksExpenseList;
+                mCategoryExpensesAdapter.setExpenseList(mCurrUserSelectedExpenseList);
                 mRecyclerView.setAdapter(mCategoryExpensesAdapter);
             }
         });
@@ -182,6 +190,8 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
 
     @Override
     public void onExpenseItemClicked(int itemPosition) {
+        mEditExpenseViewModel.setLiveExpense(mCurrUserSelectedExpenseList.get(itemPosition));
+        Navigation.findNavController(getActivity(), R.id.fragment).navigate(R.id.editExpense);
 
     }
 
@@ -194,19 +204,22 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_cat_expense_week) {
-            mCategoryExpensesAdapter.setExpenseList(mThisWeeksExpenseList);
+            mCurrUserSelectedExpenseList = mThisWeeksExpenseList;
+            mCategoryExpensesAdapter.setExpenseList(mCurrUserSelectedExpenseList);
             mRecyclerView.setAdapter(mCategoryExpensesAdapter);
 
             mExpenseTotal_tv.setText(mDf.format(mThisWeeksExpenseTotal));
             mExpensePeriod_tv.setText(getString(R.string.this_weeks_total_label));
         } else if (item.getItemId() == R.id.menu_cat_expense_month) {
-            mCategoryExpensesAdapter.setExpenseList(mThisMonthsExpenseList);
+            mCurrUserSelectedExpenseList = mThisMonthsExpenseList;
+            mCategoryExpensesAdapter.setExpenseList(mCurrUserSelectedExpenseList);
             mRecyclerView.setAdapter(mCategoryExpensesAdapter);
 
             mExpenseTotal_tv.setText(mDf.format(mThisMonthsExpenseTotal));
             mExpensePeriod_tv.setText(getString(R.string.this_months_total_label));
         } else {
-            mCategoryExpensesAdapter.setExpenseList(mThisYearsExpenseList);
+            mCurrUserSelectedExpenseList = mThisYearsExpenseList;
+            mCategoryExpensesAdapter.setExpenseList(mCurrUserSelectedExpenseList);
             mRecyclerView.setAdapter(mCategoryExpensesAdapter);
 
             mExpenseTotal_tv.setText(mDf.format(mThisYearsExpenseTotal));

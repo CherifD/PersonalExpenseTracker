@@ -34,4 +34,9 @@
     <string name="this_weeks_total_label">This week\'s total:</string>
     <string name="this_months_total_label">This month\'s total:</string>
     <string name="this_years_total_label">This year\'s total:</string>
+    <string name="update_btn_label">update</string>
+    <string name="delete_btn_label_edit_expense">delete</string>
+    <string name="msg_deleted_expense">Expense deleted!</string>
+    <string name="msg_expense_updated">Expense updated.</string>
+    <string name="default_category_newExpense">Food</string>
 </resources>

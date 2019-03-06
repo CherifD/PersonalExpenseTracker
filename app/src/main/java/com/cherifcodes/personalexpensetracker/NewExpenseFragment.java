@@ -1,6 +1,9 @@
 package com.cherifcodes.personalexpensetracker;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,6 +17,7 @@ import android.widget.Toast;
 
 import com.cherifcodes.personalexpensetracker.backend.Expense;
 import com.cherifcodes.personalexpensetracker.backend.Repository;
+import com.cherifcodes.personalexpensetracker.viewModels.EditExpenseViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.SharedViewModel;
 
 import java.time.LocalDateTime;
@@ -23,52 +27,29 @@ import java.time.LocalDateTime;
  * A simple {@link Fragment} subclass.
  */
 public class NewExpenseFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    public static final String TAG = "NewExpenseFragment";
     private Spinner mSpinner;
     private EditText mBusinessNameEt;
     private EditText mAmountEt;
 
-    private SharedViewModel mViewModel;
+    private EditExpenseViewModel mEditExpenseViewModel;
+
     private Repository mRepository;
 
     public NewExpenseFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NewExpenseFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static NewExpenseFragment newInstance(String param1, String param2) {
-        NewExpenseFragment fragment = new NewExpenseFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
         mRepository = Repository.getInstance(getActivity().getApplication());
+
+        mEditExpenseViewModel = ViewModelProviders.of(getActivity()).get(EditExpenseViewModel.class);
+
+
 
         /*Expense ex0 = new Expense("Education", "Udemy", 22.69,
                 LocalDateTime.of(2019, 03, 04, 2, 23) );
@@ -137,12 +118,22 @@ public class NewExpenseFragment extends Fragment {
 
         mSpinner = newExpenseView.findViewById(R.id.spinner_category_new_expense);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+        final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.expense_categories_array, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         mSpinner.setAdapter(adapter);
+
+        mEditExpenseViewModel.getLiveExpense().observe(getActivity(),
+                new Observer<Expense>() {
+                    @Override
+                    public void onChanged(@Nullable Expense expense) {
+                        //Update spinner value
+                        int categoryPosition = adapter.getPosition(expense.getCategory());
+                        mSpinner.setSelection(categoryPosition);
+                    }
+                });
 
         return newExpenseView;
     }

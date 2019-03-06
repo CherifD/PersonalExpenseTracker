@@ -82,6 +82,14 @@ public class Repository {
         return mDb.expenseDao().getCurrYearsCategoryTotal();
     }
 
+    public void updateExpense(Expense editedExpense) {
+        mDb.expenseDao().updateExpense(editedExpense);
+    }
+
+    public void deleteExpense(Expense expense) {
+        mDb.expenseDao().deleteExpense(expense);
+    }
+
     /**
      * AsyncTask class for inserting Expense objects into database
      */

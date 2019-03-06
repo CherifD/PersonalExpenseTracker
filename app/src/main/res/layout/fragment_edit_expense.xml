@@ -1,14 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EditExpenseFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <Spinner
+        android:id="@+id/spinner_category_edit_expense"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="48dp"
+        android:layout_margin="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/edit_text_style"/>
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/et_business_name_edit_expense"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_margin="40dp"
+        android:padding="4dp"
+        android:autofillHints=""
+        android:hint="@string/business_name_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_category_edit_expense"
+        android:background="@drawable/edit_text_style"/>
+
+    <EditText
+        android:id="@+id/et_amount_edit_expense"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_margin="40dp"
+        android:padding="4dp"
+        android:hint="@string/amount_hint"
+        android:inputType="numberDecimal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_business_name_edit_expense"
+        android:background="@drawable/edit_text_style"/>
+
+    <Button
+        android:id="@+id/btn_update_edit_expense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="88dp"
+        android:text="@string/update_btn_label"
+        app:layout_constraintEnd_toEndOf="@+id/et_amount_edit_expense"
+        app:layout_constraintTop_toBottomOf="@+id/et_amount_edit_expense"
+        />
+
+    <Button
+        android:id="@+id/btn_delete_edit_expense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_btn_label_edit_expense"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_update_edit_expense"
+        app:layout_constraintStart_toStartOf="@+id/et_amount_edit_expense"
+        app:layout_constraintTop_toTopOf="@+id/btn_update_edit_expense"
+        app:layout_constraintVertical_bias="0.0"
+        />
+
+</android.support.constraint.ConstraintLayout>
