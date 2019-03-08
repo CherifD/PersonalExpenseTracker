@@ -50,7 +50,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
 
     //Represents the currently selected period (This_Week, This_Year or This_Month)
     private String mSelectedPeriod = PeriodConstants.THIS_WEEK;
-    //Represents the resource string label for the currently selected category total
     private String mSelectedCategoryTotalLabel = "";
 
     private RecyclerView mRecyclerView;
@@ -66,6 +65,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
     private TextView mCurrCategoryTotal_tv;
 
     private OnFragmentInteractionListener mOnFragmentInteractionListener;
+    private Context mContext;
 
     public CategoryTotalsFragment() {
         // Required empty public constructor
@@ -103,7 +103,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
 
         mCategoryTotalViewModel = ViewModelProviders.of(getActivity()).get(CategoryTotalViewModel.class);
 
-
+        mSelectedPeriod = mSharedPeriodViewModel.getLivePeriod().getValue();
 
         ////VIPT!!!! THE FIRST PARAMETER OF observe() MUST BE getActivity, not THIS!!!
         ///OTHERWISE THE RETURNED LIST WILL BE EMPTY OR NULL, Or the new Expense fragment will
@@ -115,14 +115,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                     @Override
                     public void onChanged(@Nullable List<CategoryTotal> categoryTotals) {
                         mCurrWeeksCategoryList = categoryTotals;
-                        mCategoryTotalsAdapter.setCategoryTotalsList(categoryTotals);
-                        mRecyclerView.setAdapter(mCategoryTotalsAdapter);
-                       updateRecyclerView(mCurrWeeksCategoryList);
-                        displayCombinedCategoryTotal(mSelectedCategoryTotalLabel,
-                                mCurrUserSelectedCategoryTotal);
-                        //displayCombinedCategoryTotal(mSelectedCategoryTotalLabel, mCurrUserSelectedCategoryTotal);
-
-                        Log.d(TAG, "End of getCurrWeeksCategoryModel.");
+                        updateCurrSelectedTotalAndList(mSelectedPeriod);
                     }
                 });
 
@@ -131,6 +124,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                     @Override
                     public void onChanged(@Nullable List<CategoryTotal> categoryTotals) {
                         mCurrMonthsCategoryList = categoryTotals;
+                        updateCurrSelectedTotalAndList(mSelectedPeriod);
                     }
                 });
 
@@ -139,6 +133,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                     @Override
                     public void onChanged(@Nullable List<CategoryTotal> categoryTotals) {
                         mCurrYearsCategoryList = categoryTotals;
+                        updateCurrSelectedTotalAndList(mSelectedPeriod);
                     }
                 });
 
@@ -152,18 +147,9 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                     public void onChanged(@Nullable String s) {
                         mSelectedPeriod = s;
                         updateCurrSelectedTotalAndList(mSelectedPeriod);
-
-                        updateRecyclerView(mCurrUserSelectedCategoryList);
-                        displayCombinedCategoryTotal(mSelectedCategoryTotalLabel,
-                                mCurrUserSelectedCategoryTotal);
-
-                        Log.i(TAG, "End of getLivePeriod()" + mCurrUserSelectedCategoryTotal);
-
-                        //updateUiAndSharedPeriod(mSelectedPeriod);
                     }
                 });
-        Log.i(TAG, "End of on createView " + mSharedPeriodViewModel.getLivePeriod().getValue());
-        updateCurrSelectedTotalAndList(mSharedPeriodViewModel.getLivePeriod().getValue());
+
         return fragmentView;
     }
 
@@ -175,6 +161,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                     public void onChanged(@Nullable Double aDouble) {
                         if (aDouble != null) {
                             mCurrWeeksCategoryTotal = aDouble;
+                            updateCurrSelectedTotalAndList(mSelectedPeriod);
                         }
                     }
                 }
@@ -184,8 +171,11 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                 new Observer<Double>() {
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
-                        if (aDouble != null)
+                        if (aDouble != null) {
                             mCurrMonthsCategoryTotal = aDouble;
+                            updateCurrSelectedTotalAndList(mSelectedPeriod);
+                        }
+
                     }
                 });
 
@@ -193,8 +183,10 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                 new Observer<Double>() {
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
-                        if (aDouble != null)
+                        if (aDouble != null) {
                             mCurrYearsCategoryTotal = aDouble;
+                            updateCurrSelectedTotalAndList(mSelectedPeriod);
+                        }
                     }
                 });
         Log.i(TAG, "Listened to Category Totals, which is: " + mCurrUserSelectedCategoryTotal);
@@ -210,7 +202,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         } else {
             clickedCategory = mCurrYearsCategoryList.get(itemPosition).getCategoryName();
         }
-
         mOnFragmentInteractionListener.navigateToCategoryExpensesFragment(clickedCategory);
     }
 
@@ -236,18 +227,19 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         } else if(period.equals(PeriodConstants.THIS_WEEK)) {
             mCurrUserSelectedCategoryList = mCurrWeeksCategoryList;
             mCurrUserSelectedCategoryTotal = mCurrWeeksCategoryTotal;
-            mSelectedCategoryTotalLabel = getResources().getString(R.string.this_weeks_total_label);
+            mSelectedCategoryTotalLabel = mContext.getString(R.string.this_weeks_total_label);
         } else if(period.equals(PeriodConstants.THIS_MONTH)) {
             mCurrUserSelectedCategoryList = mCurrMonthsCategoryList;
             mCurrUserSelectedCategoryTotal = mCurrMonthsCategoryTotal;
-            mSelectedCategoryTotalLabel = getResources().getString(R.string.this_months_total_label);
+            mSelectedCategoryTotalLabel = mContext.getString(R.string.this_months_total_label);
         } else {
             mCurrUserSelectedCategoryList = mCurrYearsCategoryList;
             mCurrUserSelectedCategoryTotal = mCurrYearsCategoryTotal;
-            mSelectedCategoryTotalLabel = getResources().getString(R.string.this_years_total_label);
+            mSelectedCategoryTotalLabel = mContext.getString(R.string.this_years_total_label);
         }
 
-        Log.i(TAG, "Updated all and currUserSelTot is: " + mCurrUserSelectedCategoryTotal);
+        displayCombinedCategoryTotal(mSelectedCategoryTotalLabel, mCurrUserSelectedCategoryTotal);
+        updateRecyclerView(mCurrUserSelectedCategoryList);
     }
 
     @Override
@@ -276,6 +268,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         if (context instanceof OnFragmentInteractionListener) {
             mOnFragmentInteractionListener = (OnFragmentInteractionListener) context;
         } else {
