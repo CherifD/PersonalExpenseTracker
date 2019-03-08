@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.CategoryTotalItemClickListener;
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.CategoryTotalsAdapter;
@@ -24,6 +26,7 @@ import com.cherifcodes.personalexpensetracker.appConstants.PeriodConstants;
 import com.cherifcodes.personalexpensetracker.backend.CategoryTotal;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryExpensesViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryTotalViewModel;
+import com.cherifcodes.personalexpensetracker.viewModels.SharedPeriodViewModel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -33,22 +36,28 @@ import java.util.List;
  * Displays expenses totals grouped by category
  */
 public class CategoryTotalsFragment extends Fragment implements CategoryTotalItemClickListener {
-
+    public static final String TAG = "CategoryTotalsFragment";
     private double mCurrWeeksCategoryTotal = 0.0;
     private double mCurrMonthsCategoryTotal;
     private double mCurrYearsCategoryTotal;
+    private double mCurrUserSelectedCategoryTotal;
 
     private List<CategoryTotal> mCurrWeeksCategoryList = new ArrayList<>();
     private List<CategoryTotal> mCurrMonthsCategoryList = new ArrayList<>();
     private List<CategoryTotal> mCurrYearsCategoryList = new ArrayList<>();
+    //Use the Week's category list as the default selected list
+    private List<CategoryTotal> mCurrUserSelectedCategoryList = mCurrWeeksCategoryList;
 
     //Represents the currently selected period (This_Week, This_Year or This_Month)
     private String mSelectedPeriod = PeriodConstants.THIS_WEEK;
+    //Represents the resource string label for the currently selected category total
+    private String mSelectedCategoryTotalLabel = "";
 
     private RecyclerView mRecyclerView;
     private CategoryTotalsAdapter mCategoryTotalsAdapter;
 
     private CategoryTotalViewModel mCategoryTotalViewModel;
+    private SharedPeriodViewModel mSharedPeriodViewModel;
     private CategoryExpensesViewModel mCategoryExpensesViewModel;
 
     private DecimalFormat mDf = new DecimalFormat("##.##");
@@ -73,8 +82,11 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                 getActivity().getApplication(), category);
         mCategoryExpensesViewModel = ViewModelProviders.of(getActivity(), factory)
                 .get(CategoryExpensesViewModel.class);
+        mSharedPeriodViewModel = ViewModelProviders.of(getActivity()).get(SharedPeriodViewModel.class);
 
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,6 +103,8 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
 
         mCategoryTotalViewModel = ViewModelProviders.of(getActivity()).get(CategoryTotalViewModel.class);
 
+
+
         ////VIPT!!!! THE FIRST PARAMETER OF observe() MUST BE getActivity, not THIS!!!
         ///OTHERWISE THE RETURNED LIST WILL BE EMPTY OR NULL, Or the new Expense fragment will
         //throw an Exception
@@ -103,6 +117,12 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                         mCurrWeeksCategoryList = categoryTotals;
                         mCategoryTotalsAdapter.setCategoryTotalsList(categoryTotals);
                         mRecyclerView.setAdapter(mCategoryTotalsAdapter);
+                       updateRecyclerView(mCurrWeeksCategoryList);
+                        displayCombinedCategoryTotal(mSelectedCategoryTotalLabel,
+                                mCurrUserSelectedCategoryTotal);
+                        //displayCombinedCategoryTotal(mSelectedCategoryTotalLabel, mCurrUserSelectedCategoryTotal);
+
+                        Log.d(TAG, "End of getCurrWeeksCategoryModel.");
                     }
                 });
 
@@ -123,8 +143,30 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                 });
 
         listenToCategoryTotals();
+
+        //Get the live, shared period and use it to update the current selected category total
+        //and category list
+        mSharedPeriodViewModel.getLivePeriod().observe(getActivity(),
+                new Observer<String>() {
+                    @Override
+                    public void onChanged(@Nullable String s) {
+                        mSelectedPeriod = s;
+                        updateCurrSelectedTotalAndList(mSelectedPeriod);
+
+                        updateRecyclerView(mCurrUserSelectedCategoryList);
+                        displayCombinedCategoryTotal(mSelectedCategoryTotalLabel,
+                                mCurrUserSelectedCategoryTotal);
+
+                        Log.i(TAG, "End of getLivePeriod()" + mCurrUserSelectedCategoryTotal);
+
+                        //updateUiAndSharedPeriod(mSelectedPeriod);
+                    }
+                });
+        Log.i(TAG, "End of on createView " + mSharedPeriodViewModel.getLivePeriod().getValue());
+        updateCurrSelectedTotalAndList(mSharedPeriodViewModel.getLivePeriod().getValue());
         return fragmentView;
     }
+
 
     private void listenToCategoryTotals() {
         mCategoryTotalViewModel.getCurrWeeksCategoryTotal().observe(
@@ -134,8 +176,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                         if (aDouble != null) {
                             mCurrWeeksCategoryTotal = aDouble;
                         }
-                        displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label),
-                                mCurrWeeksCategoryTotal);
                     }
                 }
         );
@@ -157,6 +197,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                             mCurrYearsCategoryTotal = aDouble;
                     }
                 });
+        Log.i(TAG, "Listened to Category Totals, which is: " + mCurrUserSelectedCategoryTotal);
     }
 
     @Override
@@ -179,36 +220,57 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         inflater.inflate(R.menu.category_expenses_menu, menu);
     }
 
-    private void displayCombinedCategoryTotal(String period, double categoryTotal) {
-        mCurrCategoryTotal_tv.setText(mDf.format(categoryTotal));
-        mCurrCategoryTotalLabel_tv.setText(period);
+    private void updateRecyclerView(List<CategoryTotal> categoryTotalList) {
+        mCategoryTotalsAdapter.setCategoryTotalsList(categoryTotalList);
+        mRecyclerView.setAdapter(mCategoryTotalsAdapter);
+    }
+
+    /**
+     * Updates the currently selected category total, category list and category total's label
+     * based on the specified period
+     * @param period the period currently saved in the SharedPeriodViewModel
+     */
+    private void updateCurrSelectedTotalAndList(String period) {
+        if (period == null) {
+            return;
+        } else if(period.equals(PeriodConstants.THIS_WEEK)) {
+            mCurrUserSelectedCategoryList = mCurrWeeksCategoryList;
+            mCurrUserSelectedCategoryTotal = mCurrWeeksCategoryTotal;
+            mSelectedCategoryTotalLabel = getResources().getString(R.string.this_weeks_total_label);
+        } else if(period.equals(PeriodConstants.THIS_MONTH)) {
+            mCurrUserSelectedCategoryList = mCurrMonthsCategoryList;
+            mCurrUserSelectedCategoryTotal = mCurrMonthsCategoryTotal;
+            mSelectedCategoryTotalLabel = getResources().getString(R.string.this_months_total_label);
+        } else {
+            mCurrUserSelectedCategoryList = mCurrYearsCategoryList;
+            mCurrUserSelectedCategoryTotal = mCurrYearsCategoryTotal;
+            mSelectedCategoryTotalLabel = getResources().getString(R.string.this_years_total_label);
+        }
+
+        Log.i(TAG, "Updated all and currUserSelTot is: " + mCurrUserSelectedCategoryTotal);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_cat_expense_week) {
-            mSelectedPeriod = PeriodConstants.THIS_WEEK;
-
-            mCategoryTotalsAdapter.setCategoryTotalsList(mCurrWeeksCategoryList);
-            mRecyclerView.setAdapter(mCategoryTotalsAdapter);
-
-            displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label), mCurrWeeksCategoryTotal);
+            updateUiAndSharedPeriod(PeriodConstants.THIS_WEEK);
         } else if (item.getItemId() == R.id.menu_cat_expense_month) {
-            mSelectedPeriod = PeriodConstants.THIS_MONTH;
-
-            mCategoryTotalsAdapter.setCategoryTotalsList(mCurrMonthsCategoryList);
-            mRecyclerView.setAdapter(mCategoryTotalsAdapter);
-
-            displayCombinedCategoryTotal(getString(R.string.this_months_total_label), mCurrMonthsCategoryTotal);
+            updateUiAndSharedPeriod(PeriodConstants.THIS_MONTH);
         } else {
-            mSelectedPeriod = PeriodConstants.THIS_YEAR;
-
-            mCategoryTotalsAdapter.setCategoryTotalsList(mCurrYearsCategoryList);
-            mRecyclerView.setAdapter(mCategoryTotalsAdapter);
-
-            displayCombinedCategoryTotal(getString(R.string.this_years_total_label), mCurrYearsCategoryTotal);
+            updateUiAndSharedPeriod(PeriodConstants.THIS_YEAR);
         }
         return true;
+    }
+
+    private void updateUiAndSharedPeriod(String selectedPeriod) {
+        mSharedPeriodViewModel.setLivePeriod(selectedPeriod);
+        displayCombinedCategoryTotal(mSelectedCategoryTotalLabel, mCurrUserSelectedCategoryTotal);
+        updateRecyclerView(mCurrUserSelectedCategoryList);
+    }
+
+    private void displayCombinedCategoryTotal(String period, double categoryTotal) {
+        mCurrCategoryTotal_tv.setText(mDf.format(categoryTotal));
+        mCurrCategoryTotalLabel_tv.setText(period);
     }
 
     @Override

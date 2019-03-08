@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,8 +22,8 @@ import com.cherifcodes.personalexpensetracker.adaptersAndListeners.OnFragmentInt
 import com.cherifcodes.personalexpensetracker.appConstants.PeriodConstants;
 import com.cherifcodes.personalexpensetracker.backend.CategoryTotal;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryTotalViewModel;
+import com.cherifcodes.personalexpensetracker.viewModels.SharedPeriodViewModel;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
@@ -55,6 +54,7 @@ public class PieSummaryFragment extends Fragment {
     private double mCurrWeeksCategoryTotal;
     private double mCurrMonthsCategoryTotal;
     private double mCurrYearsCategoryTotal;
+    private double mCurrUserSelectedCategoryTotal;
 
     private List<CategoryTotal> mCurrWeeksCategoryList = new ArrayList<>();
     private List<CategoryTotal> mCurrMonthsCategoryList = new ArrayList<>();
@@ -63,6 +63,7 @@ public class PieSummaryFragment extends Fragment {
     private List<CategoryTotal> mCurrUserSelectedCategoryList = mCurrWeeksCategoryList;
 
     private CategoryTotalViewModel mCategoryTotalViewModel;
+    private SharedPeriodViewModel mSharedPeriodViewModel;
 
     private DecimalFormat mDf = new DecimalFormat("##.##");
 
@@ -76,6 +77,8 @@ public class PieSummaryFragment extends Fragment {
 
     //Represents the currently selected period (This_Week, This_Year or This_Month)
     private String mSelectedPeriod = PeriodConstants.THIS_WEEK;
+    //Represents the resource string label for the currently selected category total
+    private String mSelectedCategoryTotalLabel = "";
 
     public PieSummaryFragment() {
         // Required empty public constructor
@@ -86,6 +89,8 @@ public class PieSummaryFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
+        mSharedPeriodViewModel = ViewModelProviders.of(getActivity()).get(SharedPeriodViewModel.class);
+
     }
 
     @Override
@@ -112,7 +117,8 @@ public class PieSummaryFragment extends Fragment {
                         mCurrUserSelectedCategoryList = mCurrWeeksCategoryList;
 
                         setUpPieChart();
-                        displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label), mCurrWeeksCategoryTotal);
+                        displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label),
+                                mCurrWeeksCategoryTotal);
                     }
                 });
 
@@ -129,6 +135,21 @@ public class PieSummaryFragment extends Fragment {
                     @Override
                     public void onChanged(@Nullable List<CategoryTotal> categoryTotals) {
                         mCurrYearsCategoryList = categoryTotals;
+                    }
+                });
+
+        //Get the live, shared period and use it to update the current selected category total
+        //and category list
+        mSharedPeriodViewModel.getLivePeriod().observe(getActivity(),
+                new Observer<String>() {
+                    @Override
+                    public void onChanged(@Nullable String s) {
+                        mSelectedPeriod = s;
+                        updateCurrSelectedTotalAndList(mSelectedPeriod);
+
+                        setUpPieChart();
+                        displayCombinedCategoryTotal(mSelectedCategoryTotalLabel,
+                                mCurrUserSelectedCategoryTotal);
                     }
                 });
 
@@ -149,9 +170,30 @@ public class PieSummaryFragment extends Fragment {
             }
         });
 
-        setUpPieChart();
-
         return fragmentView;
+    }
+
+    private void updateCurrSelectedTotalAndList(String s) {
+        Toast toast = Toast.makeText(getContext(), getString(R.string.msg_invalid_livePeriod),
+                Toast.LENGTH_LONG);
+        if (s == null) {
+            toast.show();
+            return;
+        } else if(s.equals(PeriodConstants.THIS_WEEK)) {
+            mCurrUserSelectedCategoryList = mCurrWeeksCategoryList;
+            mCurrUserSelectedCategoryTotal = mCurrWeeksCategoryTotal;
+            mSelectedCategoryTotalLabel = getString(R.string.this_weeks_total_label);
+        } else if(s.equals(PeriodConstants.THIS_MONTH)) {
+            mCurrUserSelectedCategoryList = mCurrMonthsCategoryList;
+            mCurrUserSelectedCategoryTotal = mCurrMonthsCategoryTotal;
+            mSelectedCategoryTotalLabel = getString(R.string.this_months_total_label);
+        } else if (s.equals(PeriodConstants.THIS_YEAR)) {
+            mCurrUserSelectedCategoryList = mCurrYearsCategoryList;
+            mCurrUserSelectedCategoryTotal = mCurrYearsCategoryTotal;
+            mSelectedCategoryTotalLabel = getString(R.string.this_years_total_label);
+        } else {
+            toast.show();
+        }
     }
 
     private void setUpPieChart() {
@@ -250,25 +292,36 @@ public class PieSummaryFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_cat_expense_week) {
-            mSelectedPeriod = PeriodConstants.THIS_WEEK;
+            /*mSelectedPeriod = PeriodConstants.THIS_WEEK;
             mCurrUserSelectedCategoryList = mCurrWeeksCategoryList;
 
-            displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label), mCurrWeeksCategoryTotal);
-            setUpPieChart();
+            displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label), mCurrWeeksCategoryTotal);*/
+            /*mSharedPeriodViewModel.setLivePeriod(PeriodConstants.THIS_WEEK);
+            displayCombinedCategoryTotal(mSelectedPeriod, mCurrUserSelectedCategoryTotal);
+            setUpPieChart();*/
+            updateUiAndSharedPeriod(PeriodConstants.THIS_WEEK);
         } else if (item.getItemId() == R.id.menu_cat_expense_month) {
-            mSelectedPeriod = PeriodConstants.THIS_MONTH;
+            /*mSelectedPeriod = PeriodConstants.THIS_MONTH;
             mCurrUserSelectedCategoryList = mCurrMonthsCategoryList;
 
             displayCombinedCategoryTotal(getString(R.string.this_months_total_label), mCurrMonthsCategoryTotal);
-            setUpPieChart();
+            setUpPieChart();*/
+            updateUiAndSharedPeriod(PeriodConstants.THIS_MONTH);
         } else {
-            mSelectedPeriod = PeriodConstants.THIS_YEAR;
+            /*mSelectedPeriod = PeriodConstants.THIS_YEAR;
             mCurrUserSelectedCategoryList = mCurrYearsCategoryList;
 
             displayCombinedCategoryTotal(getString(R.string.this_years_total_label), mCurrYearsCategoryTotal);
-            setUpPieChart();
+            setUpPieChart();*/
+            updateUiAndSharedPeriod(PeriodConstants.THIS_YEAR);
         }
         return true;
+    }
+
+    private void updateUiAndSharedPeriod(String selectedPeriod) {
+        mSharedPeriodViewModel.setLivePeriod(selectedPeriod);
+        displayCombinedCategoryTotal(mSelectedPeriod, mCurrUserSelectedCategoryTotal);
+        setUpPieChart();
     }
 
     private void displayCombinedCategoryTotal(String period, double categoryTotal) {

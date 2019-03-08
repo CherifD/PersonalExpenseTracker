@@ -39,4 +39,5 @@
     <string name="msg_deleted_expense">Expense deleted!</string>
     <string name="msg_expense_updated">Expense updated.</string>
     <string name="default_category_newExpense">Food</string>
+    <string name="msg_invalid_livePeriod">Invalid LivePeriod.</string>
 </resources>
