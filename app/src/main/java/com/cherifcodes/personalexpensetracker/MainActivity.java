@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
                 getApplication(), category);
         mCategoryExpensesViewModel = ViewModelProviders.of(
                 this, factory).get(CategoryExpensesViewModel.class);
-
     }
 
     @Override

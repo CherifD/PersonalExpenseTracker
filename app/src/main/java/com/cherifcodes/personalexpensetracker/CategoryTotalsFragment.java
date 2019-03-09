@@ -87,7 +87,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -152,7 +151,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
 
         return fragmentView;
     }
-
 
     private void listenToCategoryTotals() {
         mCategoryTotalViewModel.getCurrWeeksCategoryTotal().observe(

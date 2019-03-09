@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,9 +21,11 @@ import android.widget.TextView;
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.OnFragmentInteractionListener;
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.CategoryExpensesAdapter;
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.ExpenseItemClickListener;
+import com.cherifcodes.personalexpensetracker.appConstants.PeriodConstants;
 import com.cherifcodes.personalexpensetracker.backend.Expense;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryExpensesViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.EditExpenseViewModel;
+import com.cherifcodes.personalexpensetracker.viewModels.SharedPeriodViewModel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -38,9 +41,7 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
 
     private CategoryExpensesViewModel mCategoryExpensesViewModel;
     private EditExpenseViewModel mEditExpenseViewModel;
-
-    private RecyclerView mRecyclerView;
-    private CategoryExpensesAdapter mCategoryExpensesAdapter;
+    private SharedPeriodViewModel mSharedPeriodViewModel;
 
     private List<Expense> mThisWeeksExpenseList = new ArrayList<>();
     private List<Expense> mThisMonthsExpenseList = new ArrayList<>();
@@ -50,12 +51,20 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
     private double mThisWeeksExpenseTotal;
     private double mThisMonthsExpenseTotal;
     private double mThisYearsExpenseTotal;
+    private double mCurrSelectedExpenseTotal;
 
     private TextView mExpenseTotal_tv;
-    private TextView mExpensePeriod_tv;
+    private TextView mExpenseTotalLabel_tv;
+    private RecyclerView mRecyclerView;
+    private CategoryExpensesAdapter mCategoryExpensesAdapter;
+
     private DecimalFormat mDf = new DecimalFormat("##.##");
 
     private OnFragmentInteractionListener mOnFragmentInteractionListener;
+    private Context mContext;
+    private String mSelectedPeriod;
+    private String mSelectedExpenseTotalLabel;
+
 
     public CategoryExpensesFragment() {
         // Required empty public constructor
@@ -67,6 +76,7 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
         setHasOptionsMenu(true);
 
         mEditExpenseViewModel = ViewModelProviders.of(getActivity()).get(EditExpenseViewModel.class);
+        mSharedPeriodViewModel = ViewModelProviders.of(getActivity()).get(SharedPeriodViewModel.class);
     }
 
     @Override
@@ -75,11 +85,11 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
         // Inflate the layout for this fragment
         View categoryExpensesView = inflater.inflate(R.layout.fragment_category_expenses, container, false);
         mExpenseTotal_tv = categoryExpensesView.findViewById(R.id.tv_category_total);
-        mExpensePeriod_tv = categoryExpensesView.findViewById(R.id.tv_category_period);
+        mExpenseTotalLabel_tv = categoryExpensesView.findViewById(R.id.tv_category_period);
         TextView categoryTotalUnit = categoryExpensesView.findViewById(R.id.tv_category_unit);
 
         categoryTotalUnit.setText(getString(R.string.us_dollars));
-        mExpensePeriod_tv.setText(getString(R.string.this_weeks_total_label));
+        mExpenseTotalLabel_tv.setText(getString(R.string.this_weeks_total_label));
 
         mRecyclerView = categoryExpensesView.findViewById(R.id.reclView_category_expenses);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -89,15 +99,17 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
 
         mCategoryExpensesViewModel = mOnFragmentInteractionListener.getCatExpenseViewModel();
 
+        mSelectedPeriod = mSharedPeriodViewModel.getLivePeriod().getValue();
+
+        listenToCategoryTotals();
+
         //Listen to this week's expense list
         mCategoryExpensesViewModel.getThisWeeksExpenseList().observe(getActivity(),
                 new Observer<List<Expense>>() {
             @Override
             public void onChanged(@Nullable List<Expense> expenses) {
                 mThisWeeksExpenseList = expenses;
-                mCurrUserSelectedExpenseList = mThisWeeksExpenseList;
-                mCategoryExpensesAdapter.setExpenseList(mCurrUserSelectedExpenseList);
-                mRecyclerView.setAdapter(mCategoryExpensesAdapter);
+                updateCurrSelectedTotalAndList(mSelectedPeriod);
             }
         });
 
@@ -106,6 +118,7 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
             @Override
             public void onChanged(@Nullable List<Expense> expenses) {
                 mThisMonthsExpenseList = expenses;
+                updateCurrSelectedTotalAndList(mSelectedPeriod);
             }
         });
 
@@ -114,9 +127,9 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
             @Override
             public void onChanged(@Nullable List<Expense> expenses) {
                 mThisYearsExpenseList = expenses;
+                updateCurrSelectedTotalAndList(mSelectedPeriod);
             }
         });
-
 
         FloatingActionButton fab = categoryExpensesView.findViewById(R.id.fab_cat_expenses);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -127,7 +140,16 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
             }
         });
 
-        listenToCategoryTotals();
+        //Get the live, shared period and use it to update the current selected category total
+        //and category list
+        mSharedPeriodViewModel.getLivePeriod().observe(getActivity(),
+                new Observer<String>() {
+                    @Override
+                    public void onChanged(@Nullable String s) {
+                        mSelectedPeriod = s;
+                        updateCurrSelectedTotalAndList(mSelectedPeriod);
+                    }
+                });
 
         return categoryExpensesView;
     }
@@ -171,9 +193,52 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
                 });
     }
 
+    /**
+     * Updates the currently selected category total, category list and category total's label
+     * based on the specified period
+     * @param period the period currently saved in the SharedPeriodViewModel
+     */
+    private void updateCurrSelectedTotalAndList(String period) {
+        if (TextUtils.isEmpty(period)) {
+            throw new IllegalArgumentException("Invalid period.");
+        } else if(period.equals(PeriodConstants.THIS_WEEK)) {
+            mCurrUserSelectedExpenseList = mThisWeeksExpenseList;
+            mCurrSelectedExpenseTotal = mThisWeeksExpenseTotal;
+            mSelectedExpenseTotalLabel = mContext.getString(R.string.this_weeks_total_label);
+        } else if(period.equals(PeriodConstants.THIS_MONTH)) {
+            mCurrUserSelectedExpenseList = mThisMonthsExpenseList;
+            mCurrSelectedExpenseTotal = mThisMonthsExpenseTotal;
+            mSelectedExpenseTotalLabel = mContext.getString(R.string.this_months_total_label);
+        } else {
+            mCurrUserSelectedExpenseList = mThisYearsExpenseList;
+            mCurrSelectedExpenseTotal = mThisYearsExpenseTotal;
+            mSelectedExpenseTotalLabel = mContext.getString(R.string.this_years_total_label);
+        }
+
+        displayCombinedCategoryTotal(mSelectedExpenseTotalLabel, mCurrSelectedExpenseTotal);
+        updateRecyclerView(mCurrUserSelectedExpenseList);
+    }
+
+    private void updateUiAndSharedPeriod(String selectedPeriod) {
+        mSharedPeriodViewModel.setLivePeriod(selectedPeriod);
+        displayCombinedCategoryTotal(mSelectedExpenseTotalLabel, mCurrSelectedExpenseTotal);
+        updateRecyclerView(mCurrUserSelectedExpenseList);
+    }
+
+    private void updateRecyclerView(List<Expense> expenseList) {
+        mCategoryExpensesAdapter.setExpenseList(expenseList);
+        mRecyclerView.setAdapter(mCategoryExpensesAdapter);
+    }
+
+    private void displayCombinedCategoryTotal(String period, double expenseTotal) {
+        mExpenseTotal_tv.setText(mDf.format(expenseTotal));
+        mExpenseTotalLabel_tv.setText(period);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         if (context instanceof OnFragmentInteractionListener) {
             mOnFragmentInteractionListener = (OnFragmentInteractionListener) context;
         } else {
@@ -192,7 +257,6 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
     public void onExpenseItemClicked(int itemPosition) {
         mEditExpenseViewModel.setLiveExpense(mCurrUserSelectedExpenseList.get(itemPosition));
         Navigation.findNavController(getActivity(), R.id.fragment).navigate(R.id.editExpense);
-
     }
 
     @Override
@@ -204,27 +268,17 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_cat_expense_week) {
-            mCurrUserSelectedExpenseList = mThisWeeksExpenseList;
-            mCategoryExpensesAdapter.setExpenseList(mCurrUserSelectedExpenseList);
-            mRecyclerView.setAdapter(mCategoryExpensesAdapter);
-
-            mExpenseTotal_tv.setText(mDf.format(mThisWeeksExpenseTotal));
-            mExpensePeriod_tv.setText(getString(R.string.this_weeks_total_label));
+            updateUiAndSharedPeriod(PeriodConstants.THIS_WEEK);
         } else if (item.getItemId() == R.id.menu_cat_expense_month) {
-            mCurrUserSelectedExpenseList = mThisMonthsExpenseList;
-            mCategoryExpensesAdapter.setExpenseList(mCurrUserSelectedExpenseList);
-            mRecyclerView.setAdapter(mCategoryExpensesAdapter);
-
-            mExpenseTotal_tv.setText(mDf.format(mThisMonthsExpenseTotal));
-            mExpensePeriod_tv.setText(getString(R.string.this_months_total_label));
+            updateUiAndSharedPeriod(PeriodConstants.THIS_MONTH);
         } else {
-            mCurrUserSelectedExpenseList = mThisYearsExpenseList;
-            mCategoryExpensesAdapter.setExpenseList(mCurrUserSelectedExpenseList);
-            mRecyclerView.setAdapter(mCategoryExpensesAdapter);
-
-            mExpenseTotal_tv.setText(mDf.format(mThisYearsExpenseTotal));
-            mExpensePeriod_tv.setText(getString(R.string.this_years_total_label));
+            updateUiAndSharedPeriod(PeriodConstants.THIS_YEAR);
         }
         return true;
     }
 }
+
+
+
+
+

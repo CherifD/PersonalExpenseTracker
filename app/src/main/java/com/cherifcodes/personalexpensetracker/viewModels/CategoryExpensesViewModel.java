@@ -7,6 +7,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.cherifcodes.personalexpensetracker.appConstants.PeriodConstants;
 import com.cherifcodes.personalexpensetracker.backend.Expense;
@@ -15,7 +16,6 @@ import com.cherifcodes.personalexpensetracker.backend.Repository;
 import java.util.List;
 
 public class CategoryExpensesViewModel extends AndroidViewModel {
-
     private Repository mRepository;
     private LiveData<List<Expense>> mThisMonthsExpenseList;
     private LiveData<List<Expense>> mThisWeeksExpenseList;
@@ -33,6 +33,16 @@ public class CategoryExpensesViewModel extends AndroidViewModel {
         mCategory.setValue(category);
 
         updateExpenseList();
+    }
+
+    public void updateExpenseList() {
+        mThisMonthsExpenseList = mRepository.getThisMonthsExpenses(mCategory.getValue());
+        mThisWeeksExpenseList = mRepository.getThisWeeksExpenses(mCategory.getValue());
+        mThisYearsExpenseList = mRepository.getThisYearsExpenses(mCategory.getValue());
+
+        mThisCategoryTotalForThisWeek = mRepository.getThisCategoryTotalForThisWeek(mCategory.getValue());
+        mThisCategoryTotalForThisMonth = mRepository.getThisCategoryTotalForThisMonth(mCategory.getValue());
+        mThisCategoryTotalForThisYear = mRepository.getThiCategoryTotalForThisYear(mCategory.getValue());
     }
 
     public void setCategory(String category) {
@@ -64,15 +74,7 @@ public class CategoryExpensesViewModel extends AndroidViewModel {
         return mThisCategoryTotalForThisYear;
     }
 
-    public void updateExpenseList() {
-        mThisMonthsExpenseList = mRepository.getThisMonthsExpenses(mCategory.getValue());
-        mThisWeeksExpenseList = mRepository.getThisWeeksExpenses(mCategory.getValue());
-        mThisYearsExpenseList = mRepository.getThisYearsExpenses(mCategory.getValue());
 
-        mThisCategoryTotalForThisWeek = mRepository.getThisCategoryTotalForThisWeek(mCategory.getValue());
-        mThisCategoryTotalForThisMonth = mRepository.getThisCategoryTotalForThisMonth(mCategory.getValue());
-        mThisCategoryTotalForThisYear = mRepository.getThiCategoryTotalForThisYear(mCategory.getValue());
-    }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
         @NonNull
