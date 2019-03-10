@@ -40,4 +40,9 @@
     <string name="msg_expense_updated">Expense updated.</string>
     <string name="default_category_newExpense">Food</string>
     <string name="msg_invalid_livePeriod">Invalid LivePeriod.</string>
+
+    <!--AppWidget strings-->
+    <string name="appwidget_title_label">This month\'s total</string>
+    <string name="add_widget">Add widget</string>
+    <string name="appwidge_update_label">update</string>
 </resources>

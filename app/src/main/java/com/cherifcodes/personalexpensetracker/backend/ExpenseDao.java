@@ -44,13 +44,6 @@ public interface ExpenseDao {
             "ORDER BY date DESC")
     LiveData<List<Expense>> getThisWeekExpenses(String category);
 
-   /* @Query("SELECT COUNT(*) FROM Expense")
-    int getNumberOfRecords();
-
-    @Query("SELECT SUM(amount) from Expense WHERE date BETWEEN datetime('now', 'start of year') " +
-            "AND datetime('now', 'start of year', '1 year')")
-    double getThisYearTotal();
-*/
 
     // Below are the queries for category totals lists retrieval
     @Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
@@ -86,12 +79,6 @@ public interface ExpenseDao {
             "AND strftime('%Y', date) = strftime('%Y', 'now')" )
     LiveData<Double> getThisCategoryTotalForThisYear(String category);
 
-    /*@Query("SELECT category as categoryName, SUM(amount) as categoryTotal from Expense " +
-            "WHERE strftime('%W', date) = strftime('%W', 'now') " +
-            "AND strftime('%Y', date) = strftime('%Y', 'now') " +
-            "GROUP BY category")
-    List<CategoryTotal> getCurrWeekTotals();*/
-
     @Query("SELECT SUM(amount) from Expense WHERE " +
             "strftime('%W', date) == strftime('%W', 'now') " +
             "AND strftime('%Y', date) == strftime('%Y', 'now')")
@@ -103,4 +90,8 @@ public interface ExpenseDao {
 
     @Query("SELECT SUM(amount) from Expense WHERE strftime('%Y', date) == strftime('%Y', 'now')" )
     LiveData<Double> getCurrYearsCategoryTotal();
+
+    @Query("SELECT SUM(amount) from Expense WHERE strftime('%Y', date) == strftime('%Y', 'now') " +
+            "AND strftime('%m', date) == strftime('%m', 'now')" )
+    double getCurrMonthsCategoryTotal_forWidget();
 }

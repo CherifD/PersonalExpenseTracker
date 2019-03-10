@@ -26,6 +26,10 @@ public class Repository {
         return sInstance;
     }
 
+    public double getCurrMonthsCategoryTotal_forWidget() {
+        return mDb.expenseDao().getCurrMonthsCategoryTotal_forWidget();
+    }
+
     public LiveData<List<Expense>> getThisMonthsExpenses(String category) {
         return mDb.expenseDao().getThisMonthExpenses(category);
     }
