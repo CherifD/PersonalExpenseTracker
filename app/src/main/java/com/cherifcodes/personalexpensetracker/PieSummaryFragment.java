@@ -31,6 +31,8 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -47,9 +49,9 @@ public class PieSummaryFragment extends Fragment {
 
     private int [] chartColors = new int[]{
             R.color.red, R.color.green, R.color.orange, R.color.blue, R.color.grey, R.color.brightRed,
-            R.color.darkGreen
+            R.color.darkGreen};
 
-    };
+    private PublisherAdView mPublisherAdView;
 
     private double mCurrWeeksCategoryTotal;
     private double mCurrMonthsCategoryTotal;
@@ -88,6 +90,8 @@ public class PieSummaryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         setHasOptionsMenu(true);
         mSharedPeriodViewModel = ViewModelProviders.of(getActivity()).get(SharedPeriodViewModel.class);
 
@@ -105,6 +109,11 @@ public class PieSummaryFragment extends Fragment {
         mCurrCategoryTotalLabel_tv = fragmentView.findViewById(R.id.tv_pie_summary_period);
         mCurrCategoryTotal_tv = fragmentView.findViewById(R.id.tv_pie_summary_total);
         mPieChart = fragmentView.findViewById(R.id.pie_chart);
+
+        //Set up the ad
+        mPublisherAdView = fragmentView.findViewById(R.id.pie_publisherAdView);
+        PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
+        mPublisherAdView.loadAd(adRequest);
 
         mCategoryTotalViewModel = ViewModelProviders.of(getActivity()).get(CategoryTotalViewModel.class);
         listenToCategoryTotals();

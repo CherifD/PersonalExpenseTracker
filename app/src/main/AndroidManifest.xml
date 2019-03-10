@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".services.AppwidgetIntentService"
+            android:name=".services.AppwidgetJobIntentService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 

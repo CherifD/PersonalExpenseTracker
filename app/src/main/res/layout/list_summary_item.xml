@@ -12,7 +12,7 @@
         android:layout_height="24dp"
         android:layout_margin="8dp"
         android:src="@drawable/ic_list_white"
-        app:layout_constraintEnd_toStartOf="@+id/tv_sumary_list_item_category"
+        app:layout_constraintEnd_toStartOf="@+id/tv_summary_list_item_category"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintHorizontal_weight="1"
@@ -20,30 +20,30 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_sumary_list_item_category"
+        android:id="@+id/tv_summary_list_item_category"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Category Category Category"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/floatingActionButton"
-        app:layout_constraintEnd_toStartOf="@+id/tv_sumary_list_item_amount"
+        app:layout_constraintEnd_toStartOf="@+id/tv_summary_list_item_amount"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="6"
         app:layout_constraintStart_toEndOf="@+id/floatingActionButton"
         app:layout_constraintTop_toTopOf="@+id/floatingActionButton" />
 
     <TextView
-        android:id="@+id/tv_sumary_list_item_amount"
+        android:id="@+id/tv_summary_list_item_amount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAlignment="textEnd"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_sumary_list_item_category"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_summary_list_item_category"
         app:layout_constraintEnd_toStartOf="@+id/tv_summary_list_item_unit"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="2.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_sumary_list_item_category"
-        app:layout_constraintTop_toTopOf="@+id/tv_sumary_list_item_category"
+        app:layout_constraintStart_toEndOf="@+id/tv_summary_list_item_category"
+        app:layout_constraintTop_toTopOf="@+id/tv_summary_list_item_category"
         android:text="2,222,343.43" />
 
     <TextView
@@ -52,12 +52,12 @@
         android:layout_height="wrap_content"
         android:paddingStart="4dp"
         android:paddingEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_sumary_list_item_amount"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_summary_list_item_amount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="1.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_sumary_list_item_amount"
-        app:layout_constraintTop_toTopOf="@+id/tv_sumary_list_item_amount"
+        app:layout_constraintStart_toEndOf="@+id/tv_summary_list_item_amount"
+        app:layout_constraintTop_toTopOf="@+id/tv_summary_list_item_amount"
         android:text="dollars" />
 
     <TextView

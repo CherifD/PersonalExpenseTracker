@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.cherifcodes.personalexpensetracker.services.AppwidgetIntentService;
+import com.cherifcodes.personalexpensetracker.services.AppwidgetJobIntentService;
 
 /**
  * Implementation of App Widget functionality.
@@ -18,9 +18,9 @@ public class PXTAppWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        Intent startIntentServiceIntent = new Intent(context, AppwidgetIntentService.class);
+        Intent startIntentServiceIntent = new Intent(context, AppwidgetJobIntentService.class);
         startIntentServiceIntent.setAction(ACTION_GET_TOTAL);
-        AppwidgetIntentService.enqueueWork(context, startIntentServiceIntent);
+        AppwidgetJobIntentService.enqueueWork(context, startIntentServiceIntent);
         Log.d(TAG, "IntentService started from " + TAG);
     }
 }

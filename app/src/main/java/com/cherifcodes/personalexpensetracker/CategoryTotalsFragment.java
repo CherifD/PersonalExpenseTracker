@@ -27,6 +27,8 @@ import com.cherifcodes.personalexpensetracker.backend.CategoryTotal;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryExpensesViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryTotalViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.SharedPeriodViewModel;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -37,6 +39,9 @@ import java.util.List;
  */
 public class CategoryTotalsFragment extends Fragment implements CategoryTotalItemClickListener {
     public static final String TAG = "CategoryTotalsFragment";
+
+    private PublisherAdView mPublisherAdView;
+
     private double mCurrWeeksCategoryTotal = 0.0;
     private double mCurrMonthsCategoryTotal;
     private double mCurrYearsCategoryTotal;
@@ -96,8 +101,12 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         mCurrCategoryTotalLabel_tv = fragmentView.findViewById(R.id.tv_category_totals_label);
         mCurrCategoryTotal_tv = fragmentView.findViewById(R.id.tv_category_totals_total);
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //Set up the ad
+        mPublisherAdView = fragmentView.findViewById(R.id.cat_totals_publisherAdView);
+        PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
+        mPublisherAdView.loadAd(adRequest);
 
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mCategoryTotalsAdapter = new CategoryTotalsAdapter(mCurrWeeksCategoryList, this);
 
         mCategoryTotalViewModel = ViewModelProviders.of(getActivity()).get(CategoryTotalViewModel.class);

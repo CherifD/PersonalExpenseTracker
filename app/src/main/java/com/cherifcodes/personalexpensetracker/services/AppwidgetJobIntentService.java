@@ -21,15 +21,15 @@ import java.text.DecimalFormat;
  * An {@link JobIntentService} subclass for handling asynchronous task requests in
  * a service on a separate handler thread.
  */
-public class AppwidgetIntentService extends JobIntentService {
-    private final String TAG = AppwidgetIntentService.class.getSimpleName();
+public class AppwidgetJobIntentService extends JobIntentService {
+    private final String TAG = AppwidgetJobIntentService.class.getSimpleName();
     private static final String ACTION_GET_TOTAL = "This month's total expenses";
 
     private static final int JOB_ID = 37;
     private DecimalFormat mDf = new DecimalFormat("##.##");
 
     public static void enqueueWork(Context context, Intent work) {
-        enqueueWork(context, AppwidgetIntentService.class, JOB_ID, work);
+        enqueueWork(context, AppwidgetJobIntentService.class, JOB_ID, work);
     }
 
     @Override

@@ -69,8 +69,8 @@ public class CategoryTotalsAdapter extends RecyclerView.Adapter<CategoryTotalsAd
         public CategoryTotalHolder(@NonNull View itemView) {
             super(itemView);
 
-            mSummaryListCategory = itemView.findViewById(R.id.tv_sumary_list_item_category);
-            mSummaryListAmount = itemView.findViewById(R.id.tv_sumary_list_item_amount);
+            mSummaryListCategory = itemView.findViewById(R.id.tv_summary_list_item_category);
+            mSummaryListAmount = itemView.findViewById(R.id.tv_summary_list_item_amount);
             mSummaryListUnit = itemView.findViewById(R.id.tv_summary_list_item_unit);
             mSummaryListFabLabel = itemView.findViewById(R.id.tv_summary_list_item_fab_label);
 
