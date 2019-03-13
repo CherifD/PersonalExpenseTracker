@@ -20,6 +20,7 @@ import com.cherifcodes.personalexpensetracker.backend.Repository;
 import com.cherifcodes.personalexpensetracker.viewModels.EditExpenseViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.SharedViewModel;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -150,7 +151,7 @@ public class NewExpenseFragment extends Fragment {
             final Expense newExpense = new Expense(mSpinner.getSelectedItem().toString(),
                     mBusinessNameEt.getText().toString(),
                     Double.parseDouble(mAmountEt.getText().toString()),
-                    LocalDateTime.now());
+                    LocalDate.now());
 
             //Insert the new Expense into the database
             mRepository.insertExpense(newExpense);

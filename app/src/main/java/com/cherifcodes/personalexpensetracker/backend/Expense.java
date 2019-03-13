@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.text.TextUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,9 +14,9 @@ public class Expense {
     private String category;
     private double amount;
     private String businessName;
-    private LocalDateTime date;
+    private LocalDate date;
 
-    public Expense(String category, String businessName, double amount, LocalDateTime date) {
+    public Expense(String category, String businessName, double amount, LocalDate date) {
         this.setCategory(category);
         this.setBusinessName(businessName);
         this.setAmount(amount);
@@ -42,7 +43,7 @@ public class Expense {
         return businessName;
     }
 
-    public LocalDateTime  getDate() {
+    public LocalDate  getDate() {
         return date;
     }
 
@@ -64,9 +65,9 @@ public class Expense {
         this.businessName = businessName;
     }
 
-    public void setDate(LocalDateTime  date) {
-        // Throw an error if date is before yesterday's date.
-        if (date == null /*|| date.compareTo(LocalDateTime.now().minusDays(1)) < 0*/)
+    public void setDate(LocalDate  date) {
+        // Throw an error if date is null.
+        if (date == null)
             throw new IllegalArgumentException("Invalid expense date.");
         this.date = date;
     }
