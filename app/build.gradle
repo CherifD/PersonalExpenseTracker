@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -41,8 +40,8 @@ dependencies {
 
     // Navigation components
     def nav_version = "1.0.0-alpha11"
-    implementation "android.arch.navigation:navigation-fragment:$nav_version"
-    implementation "android.arch.navigation:navigation-ui:$nav_version"
+    implementation "android.arch.navigation:navigation-fragment:1.0.0-rc02"
+    implementation "android.arch.navigation:navigation-ui:1.0.0-rc02"
 
     // LiveData + ViewModel + Room
     def lifecycle_version = "1.1.1"
@@ -56,8 +55,9 @@ dependencies {
 
     // Firebase Clould Messaging
     implementation 'com.google.firebase:firebase-core:16.0.7'
-    implementation 'com.google.firebase:firebase-messaging:17.3.4'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
 
     //Firebase AdMob
     implementation 'com.google.firebase:firebase-ads:17.1.3'
 }
+apply plugin: 'com.google.gms.google-services'

@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import com.cherifcodes.personalexpensetracker.viewModels.CategoryTotalViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.SharedPeriodViewModel;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -68,6 +70,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
 
     private TextView mCurrCategoryTotalLabel_tv;
     private TextView mCurrCategoryTotal_tv;
+    private ImageView mWolfOfWallStreet_imv;
 
     private OnFragmentInteractionListener mOnFragmentInteractionListener;
     private Context mContext;
@@ -100,6 +103,17 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         mRecyclerView = fragmentView.findViewById(R.id.reclView_category_totals);
         mCurrCategoryTotalLabel_tv = fragmentView.findViewById(R.id.tv_category_totals_label);
         mCurrCategoryTotal_tv = fragmentView.findViewById(R.id.tv_category_totals_total);
+        mWolfOfWallStreet_imv = fragmentView.findViewById(R.id.imv_cat_totals);
+
+        // Load Image using Picasso
+        try {
+            Picasso.get()
+                    .load("https://image.tmdb.org/t/p/w500/dYtAyg4vD88hIfrR1VKDnVGhnE6.jpg")
+                    .into(mWolfOfWallStreet_imv);
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "The money image is not available", Toast.LENGTH_LONG)
+                    .show();
+        }
 
         //Set up the ad
         mPublisherAdView = fragmentView.findViewById(R.id.cat_totals_publisherAdView);
