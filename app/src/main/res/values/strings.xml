@@ -47,4 +47,6 @@
     <string name="appwidge_update_label">update</string>
 
     <string name="default_notification_channel_id">11</string>
+    <string name="pie_chart_content_description">Click the \'+\' button to add new expenses</string>
+    <string name="empty_current_year_message">Click the \'+\' button to add new expenses.</string>
 </resources>

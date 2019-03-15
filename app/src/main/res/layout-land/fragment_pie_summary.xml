@@ -50,6 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
+            style="@style/fab_style"
             android:src="@drawable/ic_dehaze_white_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -59,11 +60,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            style="@style/fab_style"
             android:src="@drawable/ic_add_white_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.gms.ads.doubleclick.PublisherAdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        <com.google.android.gms.ads.doubleclick.PublisherAdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/pie_publisherAdView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

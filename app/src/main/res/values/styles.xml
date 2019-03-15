@@ -30,7 +30,7 @@
     </style>
 
     <style name="fab_style">
-        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
     </style>
 
 </resources>

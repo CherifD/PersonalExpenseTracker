@@ -21,8 +21,6 @@ public class CategoryTotalViewModel extends AndroidViewModel {
     private LiveData<Double> mCurrMonthsCategoryTotal;
     private LiveData<Double> mCurrYearsCategoryTotal;
 
-    //private MediatorLiveData<List<CategoryTotal>> mCategoryTotalsList;
-
     public CategoryTotalViewModel(@NonNull Application application) {
         super(application);
         mRepository = Repository.getInstance(application);
@@ -33,18 +31,6 @@ public class CategoryTotalViewModel extends AndroidViewModel {
         mCurrWeeksCategoryTotal = mRepository.getCurrWeeksCategoryTotal();
         mCurrMonthsCategoryTotal = mRepository.getCurrMonthsCategoryTotal();
         mCurrYearsCategoryTotal = mRepository.getCurrYearsCategoryTotal();
-
-        /*//Set the category list to an empty list until we get data from the database
-        mCategoryTotalsList.setValue(new ArrayList<CategoryTotal>());
-        //Fetch the LiveData list from the database
-        LiveData<List<CategoryTotal>> categoryTotals = mRepository.getAllCategoryTotals();
-
-        mCategoryTotalsList.addSource(categoryTotals, new Observer<List<CategoryTotal>>() {
-            @Override
-            public void onChanged(@Nullable List<CategoryTotal> categoryTotals) {
-                mCategoryTotalsList.setValue(categoryTotals);
-            }
-        });*/
     }
 
     public LiveData<Double> getCurrWeeksCategoryTotal() {

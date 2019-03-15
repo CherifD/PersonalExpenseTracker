@@ -144,6 +144,12 @@ public class PieSummaryFragment extends Fragment {
                     @Override
                     public void onChanged(@Nullable List<CategoryTotal> categoryTotals) {
                         mCurrYearsCategoryList = categoryTotals;
+                        if (mCurrYearsCategoryList.size() <= 0) {
+                            mCurrCategoryTotal_tv.setText("");
+                            mCurrCategoryTotalLabel_tv.setText(getString(R.string.empty_current_year_message));
+                            mCurrCategoryTotalLabel_tv.setTextColor(Color.BLUE);
+                            mCurrCategoryTotalLabel_tv.setTextSize(16f);
+                        }
                     }
                 });
 
