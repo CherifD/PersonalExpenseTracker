@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginBottom="8dp">
 
     <ImageView
@@ -12,6 +11,7 @@
         android:layout_height="24dp"
         android:layout_margin="8dp"
         android:src="@drawable/ic_money_24dp"
+        android:contentDescription="@string/money_related_image"
         app:layout_constraintEnd_toStartOf="@+id/tv_business_name_cat_expense_item"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
@@ -23,7 +23,6 @@
         android:id="@+id/tv_business_name_cat_expense_item"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Category Category Category"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/img_cat_expense_item"
         app:layout_constraintEnd_toStartOf="@+id/tv_amount_cat_expense_item"
@@ -44,7 +43,7 @@
         app:layout_constraintHorizontal_weight="2.5"
         app:layout_constraintStart_toEndOf="@+id/tv_business_name_cat_expense_item"
         app:layout_constraintTop_toTopOf="@+id/tv_business_name_cat_expense_item"
-        android:text="2,222,343.43" />
+       />
 
     <TextView
         android:id="@+id/tv_unit_cat_expense_item"
@@ -55,10 +54,11 @@
         app:layout_constraintBottom_toBottomOf="@+id/tv_amount_cat_expense_item"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_weight="1.5"
+        app:layout_constraintHorizontal_weight="2.5"
         app:layout_constraintStart_toEndOf="@+id/tv_amount_cat_expense_item"
         app:layout_constraintTop_toTopOf="@+id/tv_amount_cat_expense_item"
-        android:text="dollars" />
+        android:text="@string/unit"
+        />
 
     <TextView
         android:id="@+id/tv_date_cat_expense_item"
@@ -68,6 +68,6 @@
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="@+id/tv_business_name_cat_expense_item"
         app:layout_constraintTop_toBottomOf="@+id/tv_business_name_cat_expense_item"
-        tools:text="2019-02-23"/>
+        />
 
 </android.support.constraint.ConstraintLayout>

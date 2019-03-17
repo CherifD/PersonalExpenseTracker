@@ -2,6 +2,7 @@ package com.cherifcodes.personalexpensetracker;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -19,9 +21,12 @@ import com.cherifcodes.personalexpensetracker.backend.Expense;
 import com.cherifcodes.personalexpensetracker.backend.Repository;
 import com.cherifcodes.personalexpensetracker.viewModels.EditExpenseViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.SharedViewModel;
+import com.squareup.picasso.Picasso;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import androidx.annotation.RequiresApi;
 
 
 /**
@@ -32,6 +37,7 @@ public class NewExpenseFragment extends Fragment {
     private Spinner mSpinner;
     private EditText mBusinessNameEt;
     private EditText mAmountEt;
+    private ImageView mMoneyImageView;
 
     private EditExpenseViewModel mEditExpenseViewModel;
 
@@ -107,6 +113,9 @@ public class NewExpenseFragment extends Fragment {
 
         mBusinessNameEt = newExpenseView.findViewById(R.id.et_business_name_new_expense);
         mAmountEt = newExpenseView.findViewById(R.id.et_amount_new_expense);
+        mMoneyImageView = newExpenseView.findViewById(R.id.imv_new_expense);
+
+
 
         Button saveExpenseBtn = newExpenseView.findViewById(R.id.btn_save_new_expense);
         saveExpenseBtn.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +134,16 @@ public class NewExpenseFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         mSpinner.setAdapter(adapter);
+
+        // Load Image using Picasso
+        try {
+            Picasso.get()
+                    .load("https://image.tmdb.org/t/p/w500/dYtAyg4vD88hIfrR1VKDnVGhnE6.jpg")
+                    .into(mMoneyImageView);
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "The money image is not available", Toast.LENGTH_LONG)
+                    .show();
+        }
 
         mEditExpenseViewModel.getLiveExpense().observe(getActivity(),
                 new Observer<Expense>() {
@@ -146,6 +165,7 @@ public class NewExpenseFragment extends Fragment {
                     Double.parseDouble(mAmountEt.getText().toString()) <= 0);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveExpense() {
         if (isValidExpense()) {
             final Expense newExpense = new Expense(mSpinner.getSelectedItem().toString(),

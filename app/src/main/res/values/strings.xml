@@ -29,8 +29,8 @@
     <string name="business_name_hint">Business name</string>
     <string name="amount_hint">0.00</string>
     <string name="this_week">This week</string>
-    <string name="this_month">this_month</string>
-    <string name="this_year">this_year</string>
+    <string name="this_month">This_month</string>
+    <string name="this_year">This_year</string>
     <string name="this_weeks_total_label">This week\'s total:</string>
     <string name="this_months_total_label">This month\'s total:</string>
     <string name="this_years_total_label">This year\'s total:</string>
@@ -49,4 +49,5 @@
     <string name="default_notification_channel_id">11</string>
     <string name="pie_chart_content_description">Click the \'+\' button to add new expenses</string>
     <string name="empty_current_year_message">Click the \'+\' button to add new expenses.</string>
+    <string name="money_related_image">Money related image</string>
 </resources>

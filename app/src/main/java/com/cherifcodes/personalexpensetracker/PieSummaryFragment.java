@@ -74,7 +74,6 @@ public class PieSummaryFragment extends Fragment {
 
     private PieChart mPieChart;
 
-
     private OnFragmentInteractionListener mOnFragmentInteractionListener;
 
     //Represents the currently selected period (This_Week, This_Year or This_Month)
@@ -89,9 +88,6 @@ public class PieSummaryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
         setHasOptionsMenu(true);
         mSharedPeriodViewModel = ViewModelProviders.of(getActivity()).get(SharedPeriodViewModel.class);
 
@@ -144,7 +140,7 @@ public class PieSummaryFragment extends Fragment {
                     @Override
                     public void onChanged(@Nullable List<CategoryTotal> categoryTotals) {
                         mCurrYearsCategoryList = categoryTotals;
-                        if (mCurrYearsCategoryList.size() <= 0) {
+                        if (mCurrYearsCategoryList == null || mCurrYearsCategoryList.size() <= 0) {
                             mCurrCategoryTotal_tv.setText("");
                             mCurrCategoryTotalLabel_tv.setText(getString(R.string.empty_current_year_message));
                             mCurrCategoryTotalLabel_tv.setTextColor(Color.BLUE);
@@ -225,10 +221,11 @@ public class PieSummaryFragment extends Fragment {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 int pos = (int) h.getX();
-
-                Toast toast = Toast.makeText(getContext(),
-                        mCurrUserSelectedCategoryList.get(pos).getCategoryName(), Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER, 0, 0);
+                String pieSliceSummary = mCurrUserSelectedCategoryList.get(pos).getCategoryName() +
+                         ": " + mDf.format(mCurrUserSelectedCategoryList.get(pos).getCategoryTotal());
+                Toast toast = Toast.makeText(getContext(), pieSliceSummary
+                        , Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, -88);
                 toast.show();
             }
 
@@ -254,8 +251,8 @@ public class PieSummaryFragment extends Fragment {
         set.setValueTextSize(16f);
         set.setValueTextColor(Color.WHITE);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-            set.setValueTextSize(0f);// hide the text
+        //if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+        set.setValueTextSize(0f);// hide the text
 
         set.setColors(chartColors, getContext());
 
@@ -265,8 +262,8 @@ public class PieSummaryFragment extends Fragment {
     }
 
     private void listenToCategoryTotals() {
-        mCategoryTotalViewModel.getCurrWeeksCategoryTotal().observe(
-                getActivity(), new Observer<Double>() {
+        mCategoryTotalViewModel.getCurrWeeksCategoryTotal().observe(this,
+                 new Observer<Double>() {
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
                         if (aDouble != null) {
@@ -307,27 +304,10 @@ public class PieSummaryFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_cat_expense_week) {
-            /*mSelectedPeriod = PeriodConstants.THIS_WEEK;
-            mCurrUserSelectedCategoryList = mCurrWeeksCategoryList;
-
-            displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label), mCurrWeeksCategoryTotal);*/
-            /*mSharedPeriodViewModel.setLivePeriod(PeriodConstants.THIS_WEEK);
-            displayCombinedCategoryTotal(mSelectedPeriod, mCurrUserSelectedCategoryTotal);
-            setUpPieChart();*/
             updateUiAndSharedPeriod(PeriodConstants.THIS_WEEK);
         } else if (item.getItemId() == R.id.menu_cat_expense_month) {
-            /*mSelectedPeriod = PeriodConstants.THIS_MONTH;
-            mCurrUserSelectedCategoryList = mCurrMonthsCategoryList;
-
-            displayCombinedCategoryTotal(getString(R.string.this_months_total_label), mCurrMonthsCategoryTotal);
-            setUpPieChart();*/
             updateUiAndSharedPeriod(PeriodConstants.THIS_MONTH);
         } else {
-            /*mSelectedPeriod = PeriodConstants.THIS_YEAR;
-            mCurrUserSelectedCategoryList = mCurrYearsCategoryList;
-
-            displayCombinedCategoryTotal(getString(R.string.this_years_total_label), mCurrYearsCategoryTotal);
-            setUpPieChart();*/
             updateUiAndSharedPeriod(PeriodConstants.THIS_YEAR);
         }
         return true;
