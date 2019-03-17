@@ -111,6 +111,7 @@ public class PieSummaryFragment extends Fragment {
         PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
         mPublisherAdView.loadAd(adRequest);
 
+        mSelectedPeriod = mSharedPeriodViewModel.getLivePeriod().getValue();
         mCategoryTotalViewModel = ViewModelProviders.of(getActivity()).get(CategoryTotalViewModel.class);
         listenToCategoryTotals();
 
