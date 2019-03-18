@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Personal Expense Tracker</string>
+    <string name="app_name">$$$ Tracker</string>
 
     <string-array name="expense_categories_array">
         <item>Food</item>
@@ -50,4 +50,5 @@
     <string name="pie_chart_content_description">Click the \'+\' button to add new expenses</string>
     <string name="empty_current_year_message">Click the \'+\' button to add new expenses.</string>
     <string name="money_related_image">Money related image</string>
+    <string name="chart_description">Expenses by Category</string>
 </resources>

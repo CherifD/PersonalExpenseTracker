@@ -56,7 +56,7 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
     private List<CategoryTotal> mCurrUserSelectedCategoryList = mCurrWeeksCategoryList;
 
     //Represents the currently selected period (This_Week, This_Year or This_Month)
-    private String mSelectedPeriod = PeriodConstants.THIS_WEEK;
+    private String mSelectedPeriod = "";
     private String mSelectedCategoryTotalLabel = "";
 
     private RecyclerView mRecyclerView;
@@ -64,7 +64,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
 
     private CategoryTotalViewModel mCategoryTotalViewModel;
     private SharedPeriodViewModel mSharedPeriodViewModel;
-    private CategoryExpensesViewModel mCategoryExpensesViewModel;
 
     private DecimalFormat mDf = new DecimalFormat("##.##");
 
@@ -87,8 +86,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         String category = getResources().getStringArray(R.array.expense_categories_array)[0];
         CategoryExpensesViewModel.Factory factory = new CategoryExpensesViewModel.Factory(
                 getActivity().getApplication(), category);
-        mCategoryExpensesViewModel = ViewModelProviders.of(getActivity(), factory)
-                .get(CategoryExpensesViewModel.class);
         mSharedPeriodViewModel = ViewModelProviders.of(getActivity()).get(SharedPeriodViewModel.class);
 
     }

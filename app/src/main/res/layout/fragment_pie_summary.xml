@@ -9,6 +9,7 @@
         <TextView
             android:id="@+id/tv_pie_summary_period"
             style="@style/period_style"
+            android:text="@string/this_weeks_total_label"
             app:layout_constraintEnd_toStartOf="@+id/tv_pie_summary_total"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_weight="1"
