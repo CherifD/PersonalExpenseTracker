@@ -271,8 +271,6 @@ public class PieSummaryFragment extends Fragment {
                         if (aDouble != null) {
                             mCurrWeeksCategoryTotal = aDouble;
                         }
-                        displayCombinedCategoryTotal(getString(R.string.this_weeks_total_label),
-                                mCurrWeeksCategoryTotal);
                     }
                 }
         );
@@ -317,7 +315,7 @@ public class PieSummaryFragment extends Fragment {
 
     private void updateUiAndSharedPeriod(String selectedPeriod) {
         mSharedPeriodViewModel.setLivePeriod(selectedPeriod);
-        displayCombinedCategoryTotal(mSelectedPeriod, mCurrUserSelectedCategoryTotal);
+        displayCombinedCategoryTotal(mSelectedCategoryTotalLabel, mCurrUserSelectedCategoryTotal);
         setUpPieChart();
     }
 

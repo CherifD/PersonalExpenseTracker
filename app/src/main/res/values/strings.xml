@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">$$$ Tracker</string>
+    <string name="app_name">Track $$$</string>
 
     <string-array name="expense_categories_array">
         <item>Food</item>
