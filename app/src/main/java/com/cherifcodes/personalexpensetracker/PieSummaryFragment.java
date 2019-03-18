@@ -77,7 +77,7 @@ public class PieSummaryFragment extends Fragment {
     private OnFragmentInteractionListener mOnFragmentInteractionListener;
 
     //Represents the currently selected period (This_Week, This_Year or This_Month)
-    private String mSelectedPeriod =  ""; //getResources().getString(R.string.this_weeks_total_label);
+    private String mSelectedPeriod =  "";
     //Represents the resource string label for the currently selected category total
     private String mSelectedCategoryTotalLabel = "";
 
