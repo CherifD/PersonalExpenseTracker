@@ -96,7 +96,7 @@ public class PieSummaryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        getActivity().setTitle(R.string.title_for_pie_summary);
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_pie_summary, container, false);
         FloatingActionButton categoryTotalsFab = fragmentView.findViewById(R.id.fab_pie_summary);

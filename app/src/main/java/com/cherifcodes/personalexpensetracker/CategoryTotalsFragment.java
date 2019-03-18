@@ -82,7 +82,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-
         String category = getResources().getStringArray(R.array.expense_categories_array)[0];
         CategoryExpensesViewModel.Factory factory = new CategoryExpensesViewModel.Factory(
                 getActivity().getApplication(), category);
@@ -94,6 +93,8 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle(R.string.title_for_pie_summary);
+
         // Inflate the layout for this fragment
         View fragmentView =  inflater.inflate(R.layout.fragment_category_totals, container, false);
         mRecyclerView = fragmentView.findViewById(R.id.reclView_category_totals);

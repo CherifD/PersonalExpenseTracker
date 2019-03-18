@@ -51,4 +51,8 @@
     <string name="empty_current_year_message">Click the \'+\' button to add new expenses.</string>
     <string name="money_related_image">Money related image</string>
     <string name="chart_description">Expenses by Category</string>
+    <string name="title_for_pie_summary">Expenses by category</string>
+    <string name="title_expenses_for_curr_category">Selected expenses</string>
+    <string name="title_new_expense">Add new expense</string>
+    <string name="title_edit_expense">Edit expense</string>
 </resources>

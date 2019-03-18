@@ -56,6 +56,8 @@ public class EditExpenseFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        getActivity().setTitle(getString(R.string.title_edit_expense));
         // Inflate the layout for this fragment
         View editExpenseView =inflater.inflate(R.layout.fragment_edit_expense, container, false);
 

@@ -82,6 +82,7 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getActivity().setTitle(getString(R.string.title_expenses_for_curr_category));
         // Inflate the layout for this fragment
         View categoryExpensesView = inflater.inflate(R.layout.fragment_category_expenses, container, false);
         mExpenseTotal_tv = categoryExpensesView.findViewById(R.id.tv_category_total);
