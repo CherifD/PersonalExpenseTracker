@@ -55,4 +55,9 @@
     <string name="title_expenses_for_curr_category">Selected expenses</string>
     <string name="title_new_expense">Add new expense</string>
     <string name="title_edit_expense">Edit expense</string>
+    <string name="alert_dialog_title">Message</string>
+    <string name="alert_dialog_message">Save changes ??</string>
+    <string name="alert_dialog_yes_label">Yes</string>
+    <string name="alert_dialog_no_label">No</string>
+    <string name="no_internet_error_message">Please connect to the Internet and try again.</string>
 </resources>

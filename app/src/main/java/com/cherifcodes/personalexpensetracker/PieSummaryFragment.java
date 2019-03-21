@@ -49,7 +49,9 @@ public class PieSummaryFragment extends Fragment {
 
     private int [] chartColors = new int[]{
             R.color.red, R.color.green, R.color.orange, R.color.blue, R.color.grey, R.color.brightRed,
-            R.color.darkGreen};
+            R.color.darkGreen, R.color.brown, R.color.light_pink, R.color.dark_blue, R.color.dark_pink, R.color.light_grey,
+            R.color.light_blue
+    };
 
     private PublisherAdView mPublisherAdView;
 
@@ -213,8 +215,10 @@ public class PieSummaryFragment extends Fragment {
         Legend legend = mPieChart.getLegend();
         legend.setWordWrapEnabled(true);
         mPieChart.setDrawEntryLabels(false);
-        mPieChart.getDescription().setText(getString(R.string.chart_description));
-
+        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE)
+            mPieChart.getDescription().setText(getString(R.string.chart_description));
+        else
+            mPieChart.getDescription().setText("");
 
         loadPieChart(mCurrUserSelectedCategoryList);
 
@@ -249,11 +253,10 @@ public class PieSummaryFragment extends Fragment {
         }
 
         PieDataSet set = new PieDataSet(pieEntryList, "");
-        set.setSliceSpace(3f);
+        /*set.setSliceSpace(3f);
         set.setValueTextSize(16f);
-        set.setValueTextColor(Color.WHITE);
+        set.setValueTextColor(Color.WHITE);*/
 
-        //if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
         set.setValueTextSize(0f);// hide the text
 
         set.setColors(chartColors, getContext());
@@ -270,6 +273,9 @@ public class PieSummaryFragment extends Fragment {
                     public void onChanged(@Nullable Double aDouble) {
                         if (aDouble != null) {
                             mCurrWeeksCategoryTotal = aDouble;
+                            updateCurrSelectedTotalAndList(mSelectedPeriod);
+                            displayCombinedCategoryTotal(mSelectedCategoryTotalLabel,
+                                    mCurrUserSelectedCategoryTotal);
                         }
                     }
                 }
@@ -280,8 +286,12 @@ public class PieSummaryFragment extends Fragment {
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
 
-                        if (aDouble != null)
+                        if (aDouble != null) {
                             mCurrMonthsCategoryTotal = aDouble;
+                            updateCurrSelectedTotalAndList(mSelectedPeriod);
+                            displayCombinedCategoryTotal(mSelectedCategoryTotalLabel,
+                                    mCurrUserSelectedCategoryTotal);
+                        }
                     }
                 });
 
@@ -289,8 +299,12 @@ public class PieSummaryFragment extends Fragment {
                 new Observer<Double>() {
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
-                        if (aDouble != null)
+                        if (aDouble != null) {
                             mCurrYearsCategoryTotal = aDouble;
+                            updateCurrSelectedTotalAndList(mSelectedPeriod);
+                            displayCombinedCategoryTotal(mSelectedCategoryTotalLabel,
+                                    mCurrUserSelectedCategoryTotal);
+                        }
                     }
                 });
     }

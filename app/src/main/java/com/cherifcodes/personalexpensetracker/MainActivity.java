@@ -1,28 +1,17 @@
 package com.cherifcodes.personalexpensetracker;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.OnFragmentInteractionListener;
-import com.cherifcodes.personalexpensetracker.appConstants.PeriodConstants;
-import com.cherifcodes.personalexpensetracker.backend.CategoryTotal;
-import com.cherifcodes.personalexpensetracker.backend.Expense;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryExpensesViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryTotalViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-
-import java.util.List;
+import com.google.android.gms.ads.MobileAds;
 
 import androidx.navigation.Navigation;
 
@@ -46,25 +35,30 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         mCategoryExpensesViewModel = ViewModelProviders.of(
                 this, factory).get(CategoryExpensesViewModel.class);
 
-    /*    FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "getInstanceId failed", task.getException());
-                            return;
-                        }
+        if (!isConnectedToTheInternet()) {
+            Toast.makeText(this, getString(R.string.no_internet_error_message),
+                    Toast.LENGTH_LONG).show();
+            finishAndRemoveTask();
 
-                        // Get new Instance ID token
-                        String token = task.getResult().getToken();
+        }
+        //MobileAds.initialize(this, "ca-app-pub-...");
 
-                        // Log and toast
-                        //String msg = getString(R.string.msg_token_fmt, token);
-                        Log.d(TAG, token);
-                        //Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
-*/
+
+    }
+
+    /**
+     * Determines if the device is connected to the internet
+     *
+     * @return true if there is a network connection, false otherwise
+     */
+    private boolean isConnectedToTheInternet() {
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
+        }
+        return false;
     }
 
     @Override
