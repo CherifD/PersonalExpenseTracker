@@ -20,11 +20,9 @@ import android.widget.Toast;
 import com.cherifcodes.personalexpensetracker.backend.Expense;
 import com.cherifcodes.personalexpensetracker.backend.Repository;
 import com.cherifcodes.personalexpensetracker.viewModels.EditExpenseViewModel;
-import com.cherifcodes.personalexpensetracker.viewModels.SharedViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import androidx.annotation.RequiresApi;
 
@@ -55,54 +53,6 @@ public class NewExpenseFragment extends Fragment {
         mRepository = Repository.getInstance(getActivity().getApplication());
 
         mEditExpenseViewModel = ViewModelProviders.of(getActivity()).get(EditExpenseViewModel.class);
-
-
-
-        /*Expense ex0 = new Expense("Education", "Udemy", 22.69,
-                LocalDateTime.of(2019, 03, 04, 2, 23) );
-        mRepository.insertExpense(ex0);*/
-
-       /* Expense ex1 = new Expense("Sports", "Dick's", 89.65,
-                LocalDateTime.of(2019, 03, 4, 11, 59) );
-        mRepository.insertExpense(ex1);*/
-
-        //Insert dummy Expenses for testing
-       /* Expense ex0 = new Expense("Education", "NC State", 708.69,
-                LocalDateTime.of(2019, 01, 25, 2, 23) );
-        mRepository.insertExpense(ex0);
-
-        Expense ex1 = new Expense("Recreation", "Museum", 78.56,
-                LocalDateTime.of(2019, 04, 01, 2, 23) );
-        mRepository.insertExpense(ex1);
-
-        Expense ex2 = new Expense("Clothes", "Target", 90.34,
-                LocalDateTime.of(2019, 05, 02, 2, 23) );
-        mRepository.insertExpense(ex2);
-
-        Expense ex3 = new Expense("Clothes", "Target", 20.29,
-                LocalDateTime.of(2019, 03, 03, 2, 23) );
-        mRepository.insertExpense(ex2);
-
-        Expense ex4 = new Expense("Health", "Rite-Aid", 89.45,
-                LocalDateTime.of(2019, 06, 04, 2, 23) );
-        mRepository.insertExpense(ex4);
-
-        Expense ex5 = new Expense("Health", "Rite-Aid", 120,
-                LocalDateTime.of(2019, 04, 11, 2, 23) );
-        mRepository.insertExpense(ex5);
-
-        Expense ex6 = new Expense("Food", "Wal-Mart", 100,
-                LocalDateTime.of(2019, 05, 16, 2, 23) );
-        mRepository.insertExpense(ex6);
-
-        Expense ex7 = new Expense("Transportation", "Exxon Mobile", 27.90,
-                LocalDateTime.of(2019, 07, 17, 2, 23) );
-        mRepository.insertExpense(ex7);
-
-        Expense ex8 = new Expense("Food", "Food Lion", 78.32,
-                LocalDateTime.of(2020, 02, 01, 2, 23) );
-        mRepository.insertExpense(ex7);*/
-        //mViewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
     }
 
     @Override
@@ -116,8 +66,6 @@ public class NewExpenseFragment extends Fragment {
         mBusinessNameEt = newExpenseView.findViewById(R.id.et_business_name_new_expense);
         mAmountEt = newExpenseView.findViewById(R.id.et_amount_new_expense);
         mMoneyImageView = newExpenseView.findViewById(R.id.imv_new_expense);
-
-
 
         Button saveExpenseBtn = newExpenseView.findViewById(R.id.btn_save_new_expense);
         saveExpenseBtn.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +91,7 @@ public class NewExpenseFragment extends Fragment {
                     .load("https://image.tmdb.org/t/p/w500/dYtAyg4vD88hIfrR1VKDnVGhnE6.jpg")
                     .into(mMoneyImageView);
         } catch (Exception e) {
-            Toast.makeText(getActivity(), "The money image is not available", Toast.LENGTH_LONG)
+            Toast.makeText(getActivity(), getString(R.string.msg_unavailable_picaso_image), Toast.LENGTH_LONG)
                     .show();
         }
 
@@ -181,7 +129,7 @@ public class NewExpenseFragment extends Fragment {
             //Reset the new Expense form
             clearNewExpenseData();
         } else {
-            Toast.makeText(getContext(), "Invalid expense.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), getString(R.string.msg_invalid_expense), Toast.LENGTH_LONG).show();
         }
     }
 

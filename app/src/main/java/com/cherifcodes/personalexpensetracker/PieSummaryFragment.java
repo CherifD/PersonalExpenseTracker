@@ -253,9 +253,6 @@ public class PieSummaryFragment extends Fragment {
         }
 
         PieDataSet set = new PieDataSet(pieEntryList, "");
-        /*set.setSliceSpace(3f);
-        set.setValueTextSize(16f);
-        set.setValueTextColor(Color.WHITE);*/
 
         set.setValueTextSize(0f);// hide the text
 

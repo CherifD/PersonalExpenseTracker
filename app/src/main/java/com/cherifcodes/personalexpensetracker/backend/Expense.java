@@ -5,7 +5,6 @@ import android.arch.persistence.room.PrimaryKey;
 import android.text.TextUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 public class Expense {

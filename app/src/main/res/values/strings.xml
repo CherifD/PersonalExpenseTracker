@@ -60,4 +60,7 @@
     <string name="alert_dialog_yes_label">Yes</string>
     <string name="alert_dialog_no_label">No</string>
     <string name="no_internet_error_message">Please connect to the Internet and try again.</string>
+    <string name="msg_invalid_expense">Invalid expense.</string>
+    <string name="msg_unavailable_picaso_image">The money image is not available</string>
+    <string name="zero_total">0.00</string>
 </resources>

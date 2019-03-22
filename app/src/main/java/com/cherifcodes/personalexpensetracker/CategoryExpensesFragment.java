@@ -18,9 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.cherifcodes.personalexpensetracker.adaptersAndListeners.OnFragmentInteractionListener;
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.CategoryExpensesAdapter;
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.ExpenseItemClickListener;
+import com.cherifcodes.personalexpensetracker.adaptersAndListeners.OnFragmentInteractionListener;
 import com.cherifcodes.personalexpensetracker.appConstants.PeriodConstants;
 import com.cherifcodes.personalexpensetracker.backend.Expense;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryExpensesViewModel;
@@ -161,7 +161,7 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
                         if (aDouble == null) {
-                            mExpenseTotal_tv.setText("0.00");
+                            mExpenseTotal_tv.setText(getString(R.string.zero_total));
                         } else {
                             mThisWeeksExpenseTotal = aDouble;
                             mExpenseTotal_tv.setText(mDf.format(mThisWeeksExpenseTotal));
@@ -174,7 +174,7 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
                         if (aDouble == null) {
-                            mExpenseTotal_tv.setText("0.00");
+                            mExpenseTotal_tv.setText(getString(R.string.zero_total));
                         } else {
                             mThisMonthsExpenseTotal = aDouble;
                         }
@@ -186,7 +186,7 @@ public class CategoryExpensesFragment extends Fragment implements ExpenseItemCli
                     @Override
                     public void onChanged(@Nullable Double aDouble) {
                         if (aDouble == null) {
-                            mExpenseTotal_tv.setText("0.00");
+                            mExpenseTotal_tv.setText(getString(R.string.zero_total));
                         } else {
                             mThisYearsExpenseTotal = aDouble;
                         }

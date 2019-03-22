@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.cherifcodes.personalexpensetracker.MainActivity;
@@ -39,8 +38,7 @@ public class AppwidgetJobIntentService extends JobIntentService {
             final String action = intent.getAction();
             if (ACTION_GET_TOTAL.equals(action)) {
                 Repository repository = Repository.getInstance(getApplication());
-                Log.d(TAG, "This month's total: " +
-                        repository.getCurrMonthsCategoryTotal_forWidget());
+
                 double thisMonthsTotal = repository.getCurrMonthsCategoryTotal_forWidget();
 
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);

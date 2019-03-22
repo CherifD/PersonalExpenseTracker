@@ -4,7 +4,6 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,9 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.CategoryTotalItemClickListener;
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.CategoryTotalsAdapter;
@@ -30,7 +27,6 @@ import com.cherifcodes.personalexpensetracker.viewModels.CategoryTotalViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.SharedPeriodViewModel;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
-import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -113,11 +109,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
 
         mSelectedPeriod = mSharedPeriodViewModel.getLivePeriod().getValue();
 
-        ////VIPT!!!! THE FIRST PARAMETER OF observe() MUST BE getActivity, not THIS!!!
-        ///OTHERWISE THE RETURNED LIST WILL BE EMPTY OR NULL, Or the new Expense fragment will
-        //throw an Exception
-        //mCategoryTotalViewModel.getEntireCategoryTotalsList().observe(this, new Observer<List<CategoryTotal>>() {
-       // mCategoryTotalsAdapter = new CategoryTotalsAdapter(mCategoryTotalsList, this);
         mCategoryTotalViewModel.getCurrWeeksCategoryTotalList().observe(getActivity(),
                 new Observer<List<CategoryTotal>>() {
                     @Override
@@ -196,7 +187,6 @@ public class CategoryTotalsFragment extends Fragment implements CategoryTotalIte
                         }
                     }
                 });
-        Log.i(TAG, "Listened to Category Totals, which is: " + mCurrUserSelectedCategoryTotal);
     }
 
     @Override

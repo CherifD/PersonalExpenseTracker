@@ -4,14 +4,13 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.cherifcodes.personalexpensetracker.adaptersAndListeners.OnFragmentInteractionListener;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryExpensesViewModel;
 import com.cherifcodes.personalexpensetracker.viewModels.CategoryTotalViewModel;
-import com.google.android.gms.ads.MobileAds;
 
 import androidx.navigation.Navigation;
 
@@ -71,20 +70,5 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         mCategoryExpensesViewModel.setCategory(category);
         mCategoryExpensesViewModel.updateExpenseList();
         Navigation.findNavController(this, R.id.fragment).navigate(R.id.categoryExpenses);
-    }
-
-    @Override
-    public void navigateToCategoryTotalsFragment() {
-        Navigation.findNavController(this, R.id.fragment).navigate(R.id.categoryTotals);
-    }
-
-    @Override
-    public void navigateToNewExpenseFragment() {
-        Navigation.findNavController(this, R.id.fragment).navigate(R.id.newExpense);
-    }
-
-    @Override
-    public void navigateToEditExpenseFragment() {
-        Navigation.findNavController(this, R.id.fragment).navigate(R.id.editExpense);
     }
 }

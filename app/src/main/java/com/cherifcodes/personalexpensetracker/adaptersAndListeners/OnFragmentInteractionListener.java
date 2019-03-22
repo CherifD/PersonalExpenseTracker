@@ -5,7 +5,4 @@ import com.cherifcodes.personalexpensetracker.viewModels.CategoryExpensesViewMod
 public interface OnFragmentInteractionListener {
     CategoryExpensesViewModel getCatExpenseViewModel();
     void navigateToCategoryExpensesFragment(String category);
-    void navigateToCategoryTotalsFragment();
-    void navigateToNewExpenseFragment();
-    void navigateToEditExpenseFragment();
 }

@@ -2,15 +2,12 @@ package com.cherifcodes.personalexpensetracker;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cherifcodes.personalexpensetracker.backend.Expense;
@@ -29,9 +25,12 @@ import java.text.DecimalFormat;
 
 import androidx.navigation.Navigation;
 
-
 public class EditExpenseFragment extends Fragment {
     public static final String TAG = "EditExpenseFragment";
+
+    private static final String EXPENSE_BUSINESS_NAME = "businessName";
+    private static final String EXPENSE_AMOUNT = "amount";
+    private static final String EXPENSE_CATEGORY = "category";
 
     private Spinner mSpinner;
     private EditText mBusinessNameEt;
@@ -43,7 +42,7 @@ public class EditExpenseFragment extends Fragment {
     private EditExpenseViewModel mEditExpenseViewModel;
     private Repository mRepository;
     private Expense mCurrExpense;
-    private boolean unsavedChanges;
+
 
     public EditExpenseFragment() {
         // Required empty public constructor
@@ -56,21 +55,19 @@ public class EditExpenseFragment extends Fragment {
         mEditExpenseViewModel = ViewModelProviders.of(getActivity()).get(EditExpenseViewModel.class);
         mRepository = Repository.getInstance(getActivity().getApplication());
 
-        /*// This callback will only be called when MyFragment is at least Started.
-        this.getActivity().addOnBackPressedCallback(this, new OnBackPressedCallback() {
-            @Override
-            public boolean handleOnBackPressed() {
-                ...
-                return true; // return true if event was handled
-            }
-        });*/
-
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(EXPENSE_BUSINESS_NAME, mBusinessNameEt.getText().toString());
+        outState.putString(EXPENSE_AMOUNT, mAmountEt.getText().toString());
+        outState.putInt(EXPENSE_CATEGORY, mSpinner.getSelectedItemPosition());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
 
         getActivity().setTitle(getString(R.string.title_edit_expense));
 
@@ -83,7 +80,7 @@ public class EditExpenseFragment extends Fragment {
         mDeleteExpenseBtn = editExpenseView.findViewById(R.id.btn_delete_edit_expense);
         mUpdateExpenseBtn = editExpenseView.findViewById(R.id.btn_update_edit_expense);
 
-        recordUnsavedChanges(mBusinessNameEt, mAmountEt);
+
 
         // Create an ArrayAdapter using the string array and a default spinner layout
         final ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
@@ -98,7 +95,8 @@ public class EditExpenseFragment extends Fragment {
                     @Override
                     public void onChanged(@Nullable Expense expense) {
                         mCurrExpense = expense;
-                        updateUI(expense, adapter);
+                        if(savedInstanceState == null)
+                            updateUI(expense, adapter);
                     }
                 });
 
@@ -114,6 +112,13 @@ public class EditExpenseFragment extends Fragment {
                 deleteExpense();
             }
         });
+
+        //Restore the state if it was saved
+        if (savedInstanceState != null) {
+            mBusinessNameEt.setText(savedInstanceState.getString(EXPENSE_BUSINESS_NAME));
+            mAmountEt.setText(savedInstanceState.getString(EXPENSE_AMOUNT));
+            mSpinner.setSelection(savedInstanceState.getInt(EXPENSE_CATEGORY, 0));
+        }
         return editExpenseView;
     }
 
@@ -123,59 +128,6 @@ public class EditExpenseFragment extends Fragment {
         // set Spinner value
         int categoryPosition = adapter.getPosition(expense.getCategory());
         mSpinner.setSelection(categoryPosition);
-    }
-
-    private void recordUnsavedChanges(EditText businessNameEt, EditText amountEt) {
-        businessNameEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                unsavedChanges = true;
-                return false;
-            }
-        });
-
-        amountEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                unsavedChanges = true;
-                return false;
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        unsavedChanges = false;
-    }
-
-
-
-    @Override
-    public void onPause() {
-
-        /*if (unsavedChanges) {
-            AlertDialog.Builder alertBox = new AlertDialog.Builder(getContext());
-            alertBox.setTitle(R.string.alert_dialog_title);
-            alertBox.setMessage(R.string.alert_dialog_message);
-
-            alertBox.setPositiveButton(R.string.alert_dialog_yes_label,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            updateExpense();
-                        }
-                    });
-
-            alertBox.setNeutralButton(R.string.alert_dialog_no_label,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface arg0, int arg1) {
-                        }
-                    });
-
-            alertBox.show();
-        }*/
-
-        super.onPause();
     }
 
     private boolean isValidExpense(){
@@ -192,11 +144,12 @@ public class EditExpenseFragment extends Fragment {
             String editedBusinessName = mBusinessNameEt.getText().toString();
             mCurrExpense.setAmount(editedAmount);
             mCurrExpense.setBusinessName(editedBusinessName);
+            mCurrExpense.setCategory(mSpinner.getSelectedItem().toString());
 
             new UpdateExpenseAsyncTask(mRepository, mCurrExpense).execute();
 
             Toast.makeText(getContext(), getString(R.string.msg_expense_updated), Toast.LENGTH_LONG);
-            unsavedChanges = false;
+
             Navigation.findNavController(getActivity(), R.id.fragment).navigateUp();
         }
     }

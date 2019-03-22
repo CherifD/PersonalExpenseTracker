@@ -3,8 +3,6 @@ package com.cherifcodes.personalexpensetracker.backend;
 import android.arch.persistence.room.TypeConverter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 public class DateTypeConverter {
 
